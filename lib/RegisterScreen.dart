@@ -198,6 +198,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 fontSize: 12.0
                             );
                           }
+
+                           if(e.toString().contains("NETWORK_REQUEST_FAILED")){
+                             Fluttertoast.showToast(
+                                 msg: "Network problem occured",
+                                 toastLength: Toast.LENGTH_LONG,
+                                 gravity: ToastGravity.BOTTOM,
+                                 timeInSecForIosWeb: 1,
+                                 textColor: Colors.white,
+                                 fontSize: 12.0
+                             );
+                           }
+
                          }
                         },
                         padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
