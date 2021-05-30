@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "821258976914",
+    "project_id": "suites-63800",
+    "storage_bucket": "suites-63800.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821258976914:android:f9d3bbe895a675a81cf04b",
+        "android_client_info": {
+          "package_name": "com.example.suites"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821258976914-j2f7vbip3q7o6k6rpqr0ncch2nb4m7e7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwbWpWi928Iuu5HJRwBBnuQqOVvrEJXcI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821258976914-j2f7vbip3q7o6k6rpqr0ncch2nb4m7e7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
