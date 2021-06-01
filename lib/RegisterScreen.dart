@@ -225,9 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                            return LoginScreen();
-                          }));
+                          Navigator.pop(context);
                         },
                         child: Text("I've already an account",
                           textAlign: TextAlign.center,

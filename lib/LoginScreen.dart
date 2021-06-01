@@ -6,6 +6,8 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:suites/ForgotScreen.dart';
 import 'package:suites/Hotelpage.dart';
 import 'package:suites/RegisterScreen.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -33,6 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
     });
   }
 
+
+  addBoolToSF()async{
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setBool("boolvalue", true);
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Container(
                         child: GestureDetector(
                           onTap: (){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
                               return ForgotScreen();
                             }));
                           },
@@ -155,9 +163,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 loading = false;
                               });
                               if(newUser.isEmailVerified){
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
-                                  return Hotelpage();
-                                }));
+                                addBoolToSF();
+                                Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage()));
                               }
                               else{
                                 Fluttertoast.showToast(
@@ -212,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       GestureDetector(
                         onTap: (){
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context){
+                          Navigator.push(context, MaterialPageRoute(builder: (context){
                             return RegisterScreen();
                           }));
                         },
