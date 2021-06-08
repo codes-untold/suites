@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:suites/InfoColumn.dart';
 
 
 class Hotelpage extends StatefulWidget {
@@ -10,43 +11,57 @@ class Hotelpage extends StatefulWidget {
 class _HotelpageState extends State<Hotelpage> {
 
   final _auth = FirebaseAuth.instance;
-  FirebaseUser loggedinUser;
 
 
-  void getCurrentUser()async{
-    final user = await _auth.currentUser();
-  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TextFormField(
-                onSaved: (value){
+          child: Card(
+            elevation: 5,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(
+          10)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  onSaved: (value){
 
-                },
-                decoration: InputDecoration(
-                    labelText: "Hotels nearby",
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: EdgeInsets.only(top: 10.0,bottom: 10.0),
-                    suffixIcon:  Icon(Icons.calendar_today_outlined) ,
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                        borderSide: BorderSide.none
-                    )
+                  },
+                  decoration: InputDecoration(
+                      labelText: "Hotels nearby",
+                      filled: true,
+                      fillColor: Colors.white,
+                      contentPadding: EdgeInsets.only(top: 10.0,bottom: 10.0),
+                      suffixIcon:  IconButton(
+                        icon: Icon(Icons.calendar_today_outlined),
+                        onPressed: (){},
+                      ) ,
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: BorderSide.none
+                      )
+                  ),
                 ),
+              Divider(
+                thickness: 1.0,
               ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [InfoColumn(),
-          InfoColumn(),
-                InfoColumn(),],
-            )],
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [InfoColumn(),
+                   InfoColumn(),
+                  InfoColumn(),],
+              ),
+                SizedBox(
+                  height: 10.0,
+                ),],
+            ),
           ),
         ),
       ),
@@ -54,18 +69,3 @@ class _HotelpageState extends State<Hotelpage> {
   }
 }
 
-class InfoColumn extends StatelessWidget {
-  const InfoColumn({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text("Check in"),
-        Text("28 May"),
-      ],
-    );
-  }
-}

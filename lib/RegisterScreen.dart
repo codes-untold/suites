@@ -21,11 +21,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool textCheck = false;
   bool wordCheck = false;
-  FirebaseUser firebaseUser;
+
 
 
   void toggle(){
-    firebaseUser.sendEmailVerification();
 
     setState(() {
      if(_obscureText){
@@ -164,13 +163,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           });
 
                          try {
-                           final newUser = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+                           UserCredential newUser = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
+
 
                        if(newUser != null){
 
-                      await newUser.sendEmailVerification();
+                      await newUser.user.sendEmailVerification();
 
-                         setState(() {
+                      setState(() {
                            loading = false;
                          });
                          Fluttertoast.showToast(

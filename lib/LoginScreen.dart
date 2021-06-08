@@ -162,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               setState(() {
                                 loading = false;
                               });
-                              if(newUser.isEmailVerified){
+                              if(newUser.user.emailVerified){
                                 addBoolToSF();
                                 Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage()));
                               }

@@ -6,7 +6,13 @@ class InfoColumn extends StatelessWidget {
     return Column(
       children: [
         Text("Check in"),
-        Text("28 May"),
+        SizedBox(
+          height: 5.0,
+        ),
+        Text("28 May",
+        style: TextStyle(
+          fontWeight: FontWeight.w600
+        ),),
       ],
     );
   }
