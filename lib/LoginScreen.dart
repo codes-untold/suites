@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+
+  List <Map<String,dynamic>> list = [];
   bool _obscureText = true;
   final _auth = FirebaseAuth.instance;
   String password;
@@ -37,9 +40,18 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   addBoolToSF()async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.setBool("boolvalue", true);
-    
+
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("UID", _auth.currentUser.uid);
+      preferences.setBool("boolvalue", true);
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
   }
 
   @override
@@ -144,67 +156,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 10.0,
                       ),
                       RaisedButton(
-                        onPressed: ()async{
-
-                          if(!_formkey.currentState.validate()){
-                            return;
-                          }
-
-                          _formkey.currentState.save();
-                          setState(() {
-                            loading = true;
-                          });
-
-
-                          try {
-                            final newUser = await  _auth.signInWithEmailAndPassword(email: email, password: password);
-                            if(newUser != null){
-                              setState(() {
-                                loading = false;
-                              });
-                              if(newUser.user.emailVerified){
-                                addBoolToSF();
-                                Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage()));
-                              }
-                              else{
-                                Fluttertoast.showToast(
-                                    msg: "Email not verified",
-                                    toastLength: Toast.LENGTH_LONG,
-                                    gravity: ToastGravity.BOTTOM,
-                                    timeInSecForIosWeb: 1,
-                                    textColor: Colors.white,
-                                    fontSize: 12.0
-                                );
-                              }
-
-                            }
-                          }  catch (e) {
-                            setState(() {
-                              loading = false;
-                            });
-                            print(e.toString());
-                            if(e.toString().contains("WRONG_PASSWORD")){
-                              Fluttertoast.showToast(
-                                  msg: "Wrong Password",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  fontSize: 12.0
-                              );
-
-                            }
-                            if(e.toString().contains("USER_NOT_FOUND")){
-                              Fluttertoast.showToast(
-                                  msg: "User not Found",
-                                  toastLength: Toast.LENGTH_LONG,
-                                  gravity: ToastGravity.BOTTOM,
-                                  timeInSecForIosWeb: 1,
-                                  textColor: Colors.white,
-                                  fontSize: 12.0
-                              );
-                            }
-                          }
+                        onPressed: (){
+                        authenticate();
                         },
                         padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
                         child: Text("Sign in",
@@ -238,5 +191,71 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void authenticate()async{
+
+    if(!_formkey.currentState.validate()){
+      return;
+    }
+
+    _formkey.currentState.save();
+    setState(() {
+      loading = true;
+    });
+
+
+    try {
+      final newUser = await  _auth.signInWithEmailAndPassword(email: email, password: password);
+      if(newUser != null){
+        setState(() {
+          loading = false;
+        });
+        if(newUser.user.emailVerified){
+          addBoolToSF();
+
+          Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage(
+            authString: _auth.currentUser.uid,
+          )));
+        }
+        else{
+          Fluttertoast.showToast(
+              msg: "Email not verified",
+              toastLength: Toast.LENGTH_LONG,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              textColor: Colors.white,
+              fontSize: 12.0
+          );
+        }
+
+      }
+    }  catch (e) {
+      setState(() {
+        loading = false;
+      });
+      print(e.toString());
+      if(e.toString().contains("WRONG_PASSWORD")){
+        Fluttertoast.showToast(
+            msg: "Wrong Password",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 12.0
+        );
+
+      }
+      if(e.toString().contains("USER_NOT_FOUND")){
+        Fluttertoast.showToast(
+            msg: "User not Found",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 12.0
+        );
+      }
+    }
   }
 }

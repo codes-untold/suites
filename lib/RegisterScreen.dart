@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -167,6 +168,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
                        if(newUser != null){
+                         print(_auth.currentUser.uid);
+                        CollectionReference users = FirebaseFirestore.instance.collection(_auth.currentUser.uid);
+                        await users.doc(_auth.currentUser.uid).set({"id":_auth.currentUser.uid})
+                        .then((value) => print("user added"))
+                         .catchError((error){print(error);});
 
                       await newUser.user.sendEmailVerification();
 
