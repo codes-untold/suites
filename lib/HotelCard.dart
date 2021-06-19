@@ -3,12 +3,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
+import 'package:suites/CardInfo.dart';
 import 'package:suites/Hotelpage.dart';
 import 'package:suites/Listener.dart';
 import 'constants.dart';
 
 class HotelCard extends StatefulWidget {
-  const HotelCard({
+   HotelCard({
     Key key,
     @required this.querySnapshot,
 
@@ -16,16 +18,30 @@ class HotelCard extends StatefulWidget {
 
     this.function,
 
-    this.user
+    this.user,
+
+    this.snapshot,
+
+    this.multiplier,
+
+    this.check,
+
+
   }) : super(key: key);
 
-  final DocumentSnapshot querySnapshot;
+  final  Map <String,dynamic> querySnapshot;
 
   final index;
 
   final String user;
 
   final Function function;
+
+  final DocumentSnapshot snapshot;
+
+  int multiplier;
+
+  bool check;
 
   @override
   _HotelCardState createState() => _HotelCardState();
@@ -38,93 +54,112 @@ class _HotelCardState extends State<HotelCard> {
   @override
   void initState() {
 
-    if(widget.querySnapshot.data()["favourite"] == true){
-      icon = Icons.favorite_rounded;
-    }else{
-      icon = Icons.favorite_border_rounded;
-    }
+
+      if(widget.querySnapshot["favourite"] == true){
+        icon = Icons.favorite_rounded;
+      }else{
+        icon = Icons.favorite_border_rounded;
+      }
+
+
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 5.0,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(
-              16)),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(16.0),topRight:  Radius.circular(16.0)),
-            child: CachedNetworkImage(
-              imageUrl: widget.querySnapshot.data()["image"],
-              placeholder: (context,url) => Icon(Icons.hotel,size: MediaQuery.of(context).size.width *0.6,
-              color: Colors.black12,),
-            )
-            //Image.asset("images/room.jpg"),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20.0,top: 20.0),
-            child: Column(
-
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(widget.querySnapshot.data()["name"],
-                        style: Constants.hotelText),
-                    Row(children: [
-
-                      Image.asset("images/nairasign.png",
-                        width: 15.0,
-                        height: 15.0,),
-                      Text(widget.querySnapshot.data()["price"],
-                          style: Constants.hotelText),
-                    ],),
-
-                  ],
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.location_on,size: 15,),
-                            SizedBox(width: 5.0,),
-                            Text(widget.querySnapshot.data()["location"])
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Icon(Icons.star,size: 15,),
-                            SizedBox(width: 5.0,),
-                            Text("4.8 Ratings")
-                          ],
-                        )
-                      ],
-                    ),
-                    GestureDetector(
-                      onTap: () {
-
-                       work();
-
-                      },
-                      child: Icon(icon,
-                        color: Colors.blue,),
-                    )
-                  ],
-                )
-              ],
+    print(widget.multiplier);
+    return GestureDetector(
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context){
+          return CardInfo(imgList:widget.snapshot.data()["Imagelist"],);
+        }));
+      },
+      child: Card(
+        elevation: 5.0,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+                Radius.circular(16.0))),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              child: CachedNetworkImage(
+                imageUrl: widget.querySnapshot["image"],
+                placeholder: (context,url) => Icon(Icons.hotel,size: MediaQuery.of(context).size.width *0.6,
+                color: Colors.black12,),
+              ),
             ),
-          )],
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0,right: 10.0,bottom: 20.0,top: 20.0),
+              child: Column(
+
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(widget.querySnapshot["name"],
+                          style: Constants.hotelText),
+                      Row(children: [
+
+                        Image.asset("images/nairasign.png",
+                          width: 15.0,
+                          height: 15.0,),
+                        Text(widget.check == false? fixPrice(widget.querySnapshot["price"].toString()):
+                            fixPrice( (widget.querySnapshot["price"] * widget.multiplier).toString()),
+                            style: Constants.hotelText),
+                      ],),
+
+                    ],
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.location_on,size: 15,
+                              color: Colors.blue,),
+                              SizedBox(width: 5.0,),
+                              Text(widget.querySnapshot["location"],
+                              style: TextStyle(
+                                color: Colors.black54
+                              ),)
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Icon(Icons.star,size: 15,
+                                color: Colors.blue,),
+                              SizedBox(width: 5.0,),
+                              Text("4.8 Ratings",style:
+                              TextStyle(
+                                  color: Colors.black54
+                              ),)
+                            ],
+                          )
+                        ],
+                      ),
+                      GestureDetector(
+                        onTap: () {
+
+                         work();
+
+                        },
+                        child: Icon(icon,
+                          color: Colors.blue,),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            )],
+        ),
       ),
     );
   }
@@ -134,15 +169,16 @@ class _HotelCardState extends State<HotelCard> {
     if (  icon == Icons.favorite_border_rounded) {
       icon = Icons.favorite_rounded;
       print("on");
-      widget.function("${widget.querySnapshot.data()["name"]} Added to Favourites😀");
-      Data().change();
+      widget.function("${widget.querySnapshot["name"]} Added to Favourites😀");
+      Provider.of<Data>(context,listen: false).likeMethod(widget.index);
+
       setState(() {
 
 
       });
       await FirebaseFirestore.instance.collection(
           widget.user).doc(
-          widget.querySnapshot.id
+          widget.snapshot.id
       ).update({"favourite": true});
 
     }
@@ -150,17 +186,41 @@ class _HotelCardState extends State<HotelCard> {
     else {
       icon = Icons.favorite_border_rounded;
       print("off");
-      widget.function("${widget.querySnapshot.data()["name"]} Removed from Favourites•	☹️");
-      Data().change();
+      widget.function("${widget.querySnapshot["name"]} Removed from Favourites•	☹️");
+      Provider.of<Data>(context,listen: false).likeMethod(widget.index);
       setState(() {
 
       });
       await FirebaseFirestore.instance.collection(
           widget.user).doc(
-          widget.querySnapshot.id
+          widget.snapshot.id
       ).update({"favourite": false});
     }
   }
+
+  String fixPrice(String price){
+    switch (price.length) {
+      case 4:
+        return "${price.substring(0, 1)},${price.substring(1, 4)}";
+        break;
+
+      case 5:
+        return "${price.substring(0, 2)},${price.substring(2, 5)}";
+        break;
+
+      case 6:
+        return "${price.substring(0, 3)},${price.substring(3, 6)}";
+        break;
+
+      case 7:
+        return "${price.substring(0,1)},${price.substring(1, 4)},${price.substring(4, 7)}";
+
+    }
+
+
+  }
+
+
 }
 
 
