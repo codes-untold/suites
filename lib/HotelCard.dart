@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:suites/CardInfo.dart';
 import 'package:suites/Hotelpage.dart';
@@ -69,9 +70,11 @@ class _HotelCardState extends State<HotelCard> {
     print(widget.multiplier);
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context){
-          return CardInfo(imgList:widget.snapshot.data()["Imagelist"],);
-        }));
+        Navigator.push(context,PageTransition(type: PageTransitionType.rotate,child: CardInfo(
+        function: widget.function,snapshot: widget.snapshot,
+
+        )));
+
       },
       child: Card(
         elevation: 5.0,
@@ -198,29 +201,29 @@ class _HotelCardState extends State<HotelCard> {
     }
   }
 
-  String fixPrice(String price){
-    switch (price.length) {
-      case 4:
-        return "${price.substring(0, 1)},${price.substring(1, 4)}";
-        break;
-
-      case 5:
-        return "${price.substring(0, 2)},${price.substring(2, 5)}";
-        break;
-
-      case 6:
-        return "${price.substring(0, 3)},${price.substring(3, 6)}";
-        break;
-
-      case 7:
-        return "${price.substring(0,1)},${price.substring(1, 4)},${price.substring(4, 7)}";
-
-    }
-
-
-  }
 
 
 }
 
 
+String fixPrice(String price){
+  switch (price.length) {
+    case 4:
+      return "${price.substring(0, 1)},${price.substring(1, 4)}";
+      break;
+
+    case 5:
+      return "${price.substring(0, 2)},${price.substring(2, 5)}";
+      break;
+
+    case 6:
+      return "${price.substring(0, 3)},${price.substring(3, 6)}";
+      break;
+
+    case 7:
+      return "${price.substring(0,1)},${price.substring(1, 4)},${price.substring(4, 7)}";
+
+  }
+
+
+}

@@ -213,6 +213,7 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         if(newUser.user.emailVerified){
           addBoolToSF();
+          print(_auth.currentUser.uid);
 
           Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage(
             authString: _auth.currentUser.uid,

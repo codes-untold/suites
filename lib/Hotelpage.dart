@@ -51,7 +51,8 @@ class _HotelpageState extends State<Hotelpage> {
   super.initState();
   getBoolToSF().then((value){
   setState(() {
-    user = value;
+    print(value);
+    user = widget.authString?? value;
     FireWorks().addUser(user, list);
 
   });

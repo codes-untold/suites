@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +11,9 @@ class TestWidget extends StatefulWidget {
 
 class _TestWidgetState extends State<TestWidget> {
 
+
+  List<String> list = ["bbc","abc","abc","abc","abc","abc","abc","a",
+    "abc","abc",];
   @override
   void initState() {
 
@@ -18,8 +22,49 @@ class _TestWidgetState extends State<TestWidget> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    print(MediaQuery.of(context).size.width);
+    print(MediaQuery.of(context).size.height);
 
+    return Scaffold(
+      backgroundColor: Colors.white,
+body: SafeArea(
+  child:   Center(
+    child: Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: ListView.builder(itemBuilder: (BuildContext context, int i){
+          return Card(
+            elevation: 5.0,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(
+                    Radius.circular(6.0))),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.25,
+              height:  MediaQuery.of(context).size.height * 0.15,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.attach_money,color: Colors.blue[600],size:MediaQuery.of(context).size.height *0.035,),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Text(list[i],style: TextStyle(color: Colors.black54,fontSize: 12.0,fontWeight: FontWeight.w700),)
+                ],
+              ),
+            ),
+          );
+
+      },
+
+      itemCount: list.length,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+
+      ),
+    ),
+  ),
+)
     );
   }
 

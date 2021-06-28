@@ -6,6 +6,7 @@ import 'package:suites/CalendarWidget.dart';
 import 'package:suites/HomeScreen.dart';
 import 'package:suites/Hotelpage.dart';
 import 'package:suites/Listener.dart';
+import 'package:suites/RegisterScreen.dart';
 import 'package:suites/TestWidget.dart';
 import 'HomeScreen.dart';
 import 'HomeScreen.dart';
