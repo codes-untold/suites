@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:suites/ForgotScreen.dart';
-import 'package:suites/Hotelpage.dart';
+import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Screens/Hotelpage.dart';
 import 'package:suites/RegisterScreen.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:shared_preferences/shared_preferences.dart';

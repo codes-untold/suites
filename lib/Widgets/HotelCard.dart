@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:suites/CardInfo.dart';
-import 'package:suites/Hotelpage.dart';
+import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Screens/Hotelpage.dart';
 import 'package:suites/Listener.dart';
 import 'constants.dart';
 
