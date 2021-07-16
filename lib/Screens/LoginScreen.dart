@@ -1,14 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:suites/ForgotScreen.dart';
-import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Screens/Hotelpage.dart';
-import 'package:suites/RegisterScreen.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suites/Screens/ForgotScreen.dart';
+import 'package:suites/Screens/MainScreen.dart';
+import 'package:suites/Screens/RegisterScreen.dart';
+import 'package:suites/Services/Listener.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -40,9 +42,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
   addBoolToSF()async{
-
+      List <String> list = [_auth.currentUser.uid,_auth.currentUser.displayName];
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setString("UID", _auth.currentUser.uid);
+      preferences.setStringList("UID", list);
       preferences.setBool("boolvalue", true);
 
   }
@@ -214,10 +216,8 @@ class _LoginScreenState extends State<LoginScreen> {
         if(newUser.user.emailVerified){
           addBoolToSF();
           print(_auth.currentUser.uid);
-
-          Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: Hotelpage(
-            authString: _auth.currentUser.uid,
-          )));
+          Provider.of<Data>(context,listen: false).updateUser(_auth.currentUser);
+          Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: MainScreen()));
         }
         else{
           Fluttertoast.showToast(

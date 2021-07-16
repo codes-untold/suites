@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:http/http.dart';
+/*import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,4 +17,4 @@ class ShareClass{
     imageFile.writeAsBytesSync(bytes);
     Share.shareFiles(['${temp.path}/tempImage'], text: about,);
   }
-}
+}*/

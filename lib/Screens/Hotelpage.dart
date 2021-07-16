@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,18 +7,17 @@ import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:suites/CalendarWidget.dart';
-import 'package:suites/FireWorks.dart';
-import 'package:suites/HotelCard.dart';
-import 'package:suites/InfoColumn.dart';
-import 'package:suites/Listener.dart';
-import 'package:suites/TestWidget.dart';
+import 'package:suites/Networking/FireWorks.dart';
+import 'package:suites/Services/Listener.dart';
+import 'package:suites/Widgets/CalendarWidget.dart';
+import 'package:suites/Widgets/HotelCard.dart';
+import 'package:suites/Widgets/InfoColumn.dart';
+
 
 
 class Hotelpage extends StatefulWidget {
-  String authString;
 
-  Hotelpage({this.authString});
+
   @override
   _HotelpageState createState() => _HotelpageState();
 }
@@ -52,7 +49,13 @@ class _HotelpageState extends State<Hotelpage> {
   getBoolToSF().then((value){
   setState(() {
     print(value);
-    user = widget.authString?? value;
+   user =  Provider.of<Data>(context,listen: false).userInfo?.uid?.isEmpty ?? value[0];
+   /* if(Provider.of<Data>(context,listen: false).userInfo?.uid?.isEmpty??true)
+      {user = value[0];
+      print(user);}
+    else{user = Provider.of<Data>(context,listen: false).userInfo.uid;
+    print("cgfhncgnc");}*/
+    print(user);
     FireWorks().addUser(user, list);
 
   });
@@ -62,9 +65,7 @@ class _HotelpageState extends State<Hotelpage> {
 
     @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
+    return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
@@ -169,19 +170,7 @@ class _HotelpageState extends State<Hotelpage> {
               ),
             ],
           ),
-        ),
-      ),
-    bottomNavigationBar: BottomNavigationBar(
-    items: const <BottomNavigationBarItem>
-    [BottomNavigationBarItem(icon: Icon(Icons.home,size: 20.0,),label: "home"),
-      BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined,size: 20.0,),label: "location"),
-      BottomNavigationBarItem(icon: Icon(Icons.person_outline_sharp,size: 20.0,),label: "profile")],
-     currentIndex: selectedIndex,
-    selectedItemColor: Colors.blue,
-    onTap: onItemTapped,
-      selectedLabelStyle: TextStyle(color: Colors.white,fontSize: 1.0),
-      unselectedLabelStyle:  TextStyle(color: Colors.white,fontSize: 1.0) ,
-    ),);
+        );
   }
 
   void fetchPlaceHolder(){
@@ -192,12 +181,7 @@ class _HotelpageState extends State<Hotelpage> {
     }).catchError((error){print(error);});
   }
 
-  Future <String> getBoolToSF()async{
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String boolvalue = preferences.getString("UID");
-    return boolvalue;
 
-  }
 
   showInSnackBar(String text){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
@@ -245,16 +229,9 @@ class _HotelpageState extends State<Hotelpage> {
   }
 
 }
-
-Future <List<String>> getListData()async {
+Future <List<String>> getBoolToSF()async{
   SharedPreferences preferences = await SharedPreferences.getInstance();
-  List <String> list = preferences.getStringList("UID");
-  return list;
-}
-
-addListData(List <String> list)async{
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  preferences.setStringList("data", list);
+  List <String> boolvalue = preferences.getStringList("UID");
+  return boolvalue;
 
 }
-

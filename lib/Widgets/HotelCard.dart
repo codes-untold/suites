@@ -1,14 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
-import 'package:suites/CardInfo.dart';
-import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Screens/Hotelpage.dart';
-import 'package:suites/Listener.dart';
-import 'constants.dart';
+import 'package:suites/Screens/CardInfo.dart';
+import 'package:suites/Services/Listener.dart';
+import '../Services/constants.dart';
 
 class HotelCard extends StatefulWidget {
    HotelCard({
@@ -70,10 +68,10 @@ class _HotelCardState extends State<HotelCard> {
     print(widget.multiplier);
     return GestureDetector(
       onTap: (){
-        Navigator.push(context,PageTransition(type: PageTransitionType.rotate,child: CardInfo(
+        Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: CardInfo(
         function: widget.function,snapshot: widget.snapshot,
 
-        )));
+        ),duration: Duration(seconds: 1)));
 
       },
       child: Card(
@@ -85,7 +83,7 @@ class _HotelCardState extends State<HotelCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(16.0)),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(16.0),topLeft: Radius.circular(16.0)),
               child: CachedNetworkImage(
                 imageUrl: widget.querySnapshot["image"],
                 placeholder: (context,url) => Icon(Icons.hotel,size: MediaQuery.of(context).size.width *0.6,

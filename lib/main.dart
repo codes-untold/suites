@@ -1,29 +1,30 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:suites/CalendarWidget.dart';
-import 'package:suites/HomeScreen.dart';
-import 'package:suites/Hotelpage.dart';
-import 'package:suites/Listener.dart';
-import 'package:suites/RegisterScreen.dart';
+import 'package:suites/Screens/HomeScreen.dart';
+import 'package:suites/Screens/MainScreen.dart';
+import 'package:suites/Screens/ProfileScreen.dart';
 import 'package:suites/TestWidget.dart';
-import 'HomeScreen.dart';
-import 'HomeScreen.dart';
-import 'Hotelpage.dart';
-import 'Hotelpage.dart';
-import 'Hotelpage.dart';
-import 'LoginScreen.dart';
+import 'package:suites/Widgets/InfoDialog.dart';
+import 'Screens/LoginScreen.dart';
+import 'Screens/Hotelpage.dart';
+import 'Services/Listener.dart';
+
 
 
 Future <void> main()async {
   WidgetsFlutterBinding.ensureInitialized();
- await Firebase.initializeApp();
+ /* SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) async{
+
+  });*/
+  await Firebase.initializeApp();
   runApp(ChangeNotifierProvider<Data>(
     create:(context) => Data(),
     child: MaterialApp(
-     // home: await getBoolToSF()? HomeScreen():HomeScreen(),
-      home: Hotelpage(),
+      // home: await getBoolToSF()? HomeScreen():HomeScreen(),
+      home: MainScreen(),
       debugShowCheckedModeBanner: false,
     ),
   ));

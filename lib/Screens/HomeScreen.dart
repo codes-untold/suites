@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:suites/LoginScreen.dart';
+
+import 'LoginScreen.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: SafeArea(
         child: Column(

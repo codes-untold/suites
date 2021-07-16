@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:suites/HotelCard.dart';
+import 'package:http/http.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:suites/Widgets/HotelCard.dart';
 
-class  CardInfo extends StatefulWidget {
+
+class CardInfo extends StatefulWidget {
 
   Function function;
   DocumentSnapshot snapshot;
@@ -89,7 +96,7 @@ body: SingleChildScrollView(
 
                Row(
                  children: [
-                   Icon(Icons.location_on,size: 16.0,color: Colors.black87),
+                   Icon(Icons.location_on,size: 16.0,color: Colors.black),
                    Text(widget.snapshot.data()["location"]),
                  ],)
              ],
@@ -97,7 +104,9 @@ body: SingleChildScrollView(
            ),
 
            MaterialButton(
-             onPressed: (){},
+             onPressed: (){
+                shareImage();
+             },
              child: Icon(Icons.share_outlined,size: 18.0,color: Colors.blue,),
              color: Colors.blue[50],
              shape: CircleBorder(),
@@ -370,4 +379,22 @@ body: SingleChildScrollView(
       break;
     }
   }
+
+
+       void shareImage()async{
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sharing...")));
+         print(widget.snapshot.data()["about"]);
+         final response = await get(Uri.parse(item[0]));
+         final bytes = response.bodyBytes;
+
+         final Directory temp = await getExternalStorageDirectory();
+         final File imageFile = File('${temp.path}/tempImage.jpg');
+         imageFile.writeAsBytesSync(bytes);
+         print('${temp.path}/tempImage');
+         Share.shareFiles(['${temp.path}/tempImage.jpg'], text: widget.snapshot.data()["about"],
+         subject:widget.snapshot.data()["name"] );
+         
+       }
+
+
 }

@@ -1,11 +1,13 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class Data extends ChangeNotifier{
 
 
 List <int> liked = [9];
-String searchText;
+String auth;
+User userInfo;
 
   void likeMethod(int num){
 
@@ -20,11 +22,14 @@ String searchText;
   }
 
   void updateText(String text){
-    searchText = text;
+   auth = text;
     notifyListeners();
   }
 
-
+void updateUser(User user){
+    userInfo = user;
+    notifyListeners();
+}
 
 
 }

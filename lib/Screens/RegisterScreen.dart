@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:suites/LoginScreen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -168,6 +167,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
                        if(newUser != null){
+
+                       await  _auth.currentUser.updateDisplayName(username);
                          print(_auth.currentUser.uid);
                         CollectionReference users = FirebaseFirestore.instance.collection(_auth.currentUser.uid);
                         await users.doc(_auth.currentUser.uid).set({"id":_auth.currentUser.uid})
