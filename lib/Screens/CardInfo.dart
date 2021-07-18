@@ -16,9 +16,10 @@ class CardInfo extends StatefulWidget {
 
   Function function;
   DocumentSnapshot snapshot;
+  String user;
 
 
-  CardInfo({this.function,this.snapshot});
+  CardInfo({this.function,this.snapshot,this.user});
   @override
   _CardInfoState createState() => _CardInfoState();
 }
@@ -26,336 +27,339 @@ class CardInfo extends StatefulWidget {
 class _CardInfoState extends State<CardInfo> {
   List <dynamic> item = [];
   List <dynamic> itemo = [];
-  double ratingg = 3;
+  double ratingg;
+
 
 
   @override
   void initState() {
-   item = widget.snapshot.data()["Imagelist"];
-   itemo = widget.snapshot.data()["features"];
-   //print(widget.features);
+
+    ratingg = toDecimal(widget.snapshot.data()["myrating"]);
+
+    item = widget.snapshot.data()["Imagelist"];
+    itemo = widget.snapshot.data()["features"];
+    //print(widget.features);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-body: SingleChildScrollView(
-  child: Column(
-    children: [
-      CarouselSlider(
-        items: item.map((e){
-        return Container(
-          width: MediaQuery.of(context).size.width,
-          child: CachedNetworkImage(
-            imageUrl: e,
-           placeholder:  (context,url) => Icon(Icons.hotel,color:Colors.black12,size: MediaQuery.of(context).size.width *0.6),
-            imageBuilder: (context,imageProvider)=>Container(
-              height:  MediaQuery.of(context).size.height * 0.35,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: imageProvider,
-                  fit: BoxFit.fill
-                )
-              ),
-            ),
-          ),
-        );
-        }).toList(),
-        options: CarouselOptions(
-            height: MediaQuery.of(context).size.height * 0.35,
-            aspectRatio: 16/9,
-            viewportFraction: 1.0,
-            initialPage: 0,
-            enableInfiniteScroll: false,
-            reverse: false,
-            autoPlay: true,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
-            autoPlayCurve: Curves.fastOutSlowIn,
-            enlargeCenterPage: true,
-            scrollDirection: Axis.horizontal,),),
-
-
-
-   Padding(padding: EdgeInsets.all(12.0),child: Column(
-     mainAxisSize: MainAxisSize.min,
-     crossAxisAlignment: CrossAxisAlignment.start,
-     children: [
-       Row(
-         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-         children: [
-           Column(
-             mainAxisSize: MainAxisSize.min,
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Text(widget.snapshot.data()["name"],style: TextStyle(
-                   color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 18.0
-               ),),
+      body: SingleChildScrollView(
+        child: Column(
+            children: [
+              CarouselSlider(
+                items: item.map((e){
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    child: CachedNetworkImage(
+                      imageUrl: e,
+                      placeholder:  (context,url) => Icon(Icons.hotel,color:Colors.black12,size: MediaQuery.of(context).size.width *0.6),
+                      imageBuilder: (context,imageProvider)=>Container(
+                        height:  MediaQuery.of(context).size.height * 0.35,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.fill
+                            )
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                options: CarouselOptions(
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  aspectRatio: 16/9,
+                  viewportFraction: 1.0,
+                  initialPage: 0,
+                  enableInfiniteScroll: false,
+                  reverse: false,
+                  autoPlay: true,
+                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayAnimationDuration: Duration(milliseconds: 800),
+                  autoPlayCurve: Curves.fastOutSlowIn,
+                  enlargeCenterPage: true,
+                  scrollDirection: Axis.horizontal,),),
+
+
+
+              Padding(padding: EdgeInsets.all(12.0),child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.snapshot.data()["name"],style: TextStyle(
+                              color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 18.0
+                          ),),
 
-               SizedBox(height: 5.0,),
+                          SizedBox(height: 5.0,),
 
-               Row(
-                 children: [
-                   Icon(Icons.location_on,size: 16.0,color: Colors.black),
-                   Text(widget.snapshot.data()["location"]),
-                 ],)
-             ],
+                          Row(
+                            children: [
+                              Icon(Icons.location_on,size: 16.0,color: Colors.black),
+                              Text(widget.snapshot.data()["location"]),
+                            ],)
+                        ],
 
-           ),
+                      ),
 
-           MaterialButton(
-             onPressed: (){
-                shareImage();
-             },
-             child: Icon(Icons.share_outlined,size: 18.0,color: Colors.blue,),
-             color: Colors.blue[50],
-             shape: CircleBorder(),
+                      MaterialButton(
+                        onPressed: (){
+                          shareImage();
+                        },
+                        child: Icon(Icons.share_outlined,size: 18.0,color: Colors.blue,),
+                        color: Colors.blue[50],
+                        shape: CircleBorder(),
 
-           )  ],
+                      )  ],
 
 
 
-       ),
+                  ),
 
-       SizedBox(
-         height: 20.0,
-       ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
 
-       Row(
-         mainAxisAlignment: MainAxisAlignment.start,
-         crossAxisAlignment: CrossAxisAlignment.start,
-         children: [
-           Column(
-             crossAxisAlignment: CrossAxisAlignment.start,
-             children: [
-               Text("Price",
-                 style:  TextStyle(
-                     color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 14.0
-                 ),),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Price",
+                            style:  TextStyle(
+                                color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 14.0
+                            ),),
 
-               SizedBox(
-                 height: 5.0,
-               ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
 
-               Row(children: [
-                 Image.asset("images/nairasign.png",
-                   width: 15.0,
-                   height: 15.0,),
-                 Text(fixPrice(widget.snapshot.data()["price"].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
-               ],)
+                          Row(children: [
+                            Image.asset("images/nairasign.png",
+                              width: 15.0,
+                              height: 15.0,),
+                            Text(fixPrice(widget.snapshot.data()["price"].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
+                          ],)
 
-             ],
+                        ],
 
-           ),
+                      ),
 
-           SizedBox(
+                      SizedBox(
 
-             width: 30.0,
+                        width: 30.0,
 
-           ),
+                      ),
 
-           Column(
+                      Column(
 
-             crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
-             children: [
+                        children: [
 
-               Text("Rating",style:  TextStyle(
+                          Text("Rating",style:  TextStyle(
 
-                   color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 14.0
+                              color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 14.0
 
-               ),),
+                          ),),
 
-               SizedBox(
+                          SizedBox(
 
-                 height: 5.0,
+                            height: 5.0,
 
-               ),
+                          ),
 
-               Row(
+                          Row(
 
-                 children: [
+                            children: [
 
-                   Text(ratingg.toString(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),),
+                              Text(ratingg.toString(),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),),
 
-                   SizedBox(
+                              SizedBox(
 
-                     width: 5.0,
+                                width: 5.0,
 
-                   ),
+                              ),
 
-                   RatingBar.builder(
+                              RatingBar.builder(
 
-                     itemSize: 15.0,
+                                itemSize: 15.0,
 
-                     initialRating: 3,
+                                initialRating: ratingg,
 
-                     minRating: 1,
+                                direction: Axis.horizontal,
 
-                     direction: Axis.horizontal,
+                                allowHalfRating: false,
 
-                     allowHalfRating: false,
+                                itemCount: 5,
 
-                     itemCount: 5,
+                                itemBuilder: (context,_)=> Icon(
 
-                     itemBuilder: (context,_)=> Icon(
+                                  Icons.star,
 
-                       Icons.star,
+                                  color: Colors.amber,
 
-                       color: Colors.amber,
+                                ), onRatingUpdate: (rating){
 
-                     ), onRatingUpdate: (rating){
+                                print(rating);
 
-                     print(rating);
+                                setState(() {
 
-                     setState(() {
+                                  ratingg = rating;
+                                  updateRating();
+                                  ScaffoldMessenger.of(context).showSnackBar
 
-                       ratingg = rating;
+                                    (SnackBar(content: Text("Your rating has been recorded")));
 
-                       ScaffoldMessenger.of(context).showSnackBar
 
-                         (SnackBar(content: Text("Your rating has been recorded")));
+                                });
 
-                     });
+                              },),
 
-                   },),
+                            ],
 
-                 ],
+                          )
 
-               )
+                        ],
 
-             ],
 
 
+                      ),
 
-           ),
 
 
+                    ],
 
-         ],
+                  ),
 
-       ),
+                  SizedBox(
 
-       SizedBox(
+                    height: 20.0,
 
-         height: 20.0,
+                  ),
 
-       ),
 
 
+                  Container(
 
-     Container(
+                    width: MediaQuery.of(context).size.width,
 
-       width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.1,
 
-       height: MediaQuery.of(context).size.height * 0.1,
+                    child: ListView.builder(itemBuilder: (BuildContext context, int i){
 
-       child: ListView.builder(itemBuilder: (BuildContext context, int i){
+                      return Padding(
 
-         return Padding(
+                        padding: const EdgeInsets.only(right: 10),
 
-           padding: const EdgeInsets.only(right: 10),
+                        child: Card(
 
-           child: Card(
+                          color: Colors.blue[50],
 
-             color: Colors.blue[50],
+                          elevation: 5.0,
 
-             elevation: 5.0,
+                          shape: RoundedRectangleBorder(
 
-             shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
 
-                 borderRadius: BorderRadius.all(
+                                  Radius.circular(6.0))),
 
-                     Radius.circular(6.0))),
+                          child: Container(
 
-             child: Container(
+                            width: MediaQuery.of(context).size.width * 0.2,
 
-               width: MediaQuery.of(context).size.width * 0.2,
+                            height:  MediaQuery.of(context).size.height * 0.1,
 
-               height:  MediaQuery.of(context).size.height * 0.1,
+                            child: Column(
 
-               child: Column(
+                              mainAxisSize: MainAxisSize.min,
 
-                 mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
 
-                 mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
 
-                 children: [
+                                Icon(getWidget(itemo[i]),color: Colors.blue,size:MediaQuery.of(context).size.height *0.03,),
 
-                   Icon(getWidget(itemo[i]),color: Colors.blue,size:MediaQuery.of(context).size.height *0.03,),
+                                SizedBox(
 
-                   SizedBox(
+                                  height: 5,
 
-                     height: 5,
+                                ),
 
-                   ),
+                                Text(itemo[i],style: TextStyle(color: Colors.black54,fontSize: 12.0,fontWeight: FontWeight.w700),)
 
-                   Text(itemo[i],style: TextStyle(color: Colors.black54,fontSize: 12.0,fontWeight: FontWeight.w700),)
+                              ],
 
-                 ],
+                            ),
 
-               ),
+                          ),
 
-             ),
+                        ),
 
-           ),
+                      );
 
-         );
 
 
+                    },
 
-       },
 
 
+                      itemCount: itemo.length,
 
-         itemCount: itemo.length,
+                      scrollDirection: Axis.horizontal,
 
-         scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
 
-         shrinkWrap: true,
 
 
+                    ),
 
-       ),
+                  ),
 
-     ),
+                  SizedBox(
 
-       SizedBox(
+                    height: 25.0,
 
-         height: 25.0,
+                  ),
 
-       ),
+                  Text("About",
 
-       Text("About",
+                    style: TextStyle(
 
-         style: TextStyle(
+                        fontSize: 16.0,
 
-             fontSize: 16.0,
+                        fontWeight: FontWeight.w700,
 
-             fontWeight: FontWeight.w700,
+                        color: Colors.black54
 
-             color: Colors.black54
+                    ),),
 
-         ),),
+                  SizedBox(
 
-       SizedBox(
+                    height: 10,
 
-         height: 10,
+                  ),
 
-       ),
+                  Text( widget.snapshot.data()["about"]
 
-       Text( widget.snapshot.data()["about"]
+                    ,style: TextStyle(
+                      height: 1.5,
+                      //  letterSpacing: 2.0
 
-       ,style: TextStyle(
-            height: 1.5,
-         //  letterSpacing: 2.0
+                    ),)],
 
-         ),)],
+              ),) ]
 
-   ),) ]
-
-            ),
-),
+        ),
+      ),
     );
   }
 
@@ -381,20 +385,26 @@ body: SingleChildScrollView(
   }
 
 
-       void shareImage()async{
-         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sharing...")));
-         print(widget.snapshot.data()["about"]);
-         final response = await get(Uri.parse(item[0]));
-         final bytes = response.bodyBytes;
+  void shareImage()async{
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sharing...")));
+    print(widget.snapshot.data()["about"]);
+    final response = await get(Uri.parse(item[0]));
+    final bytes = response.bodyBytes;
 
-         final Directory temp = await getExternalStorageDirectory();
-         final File imageFile = File('${temp.path}/tempImage.jpg');
-         imageFile.writeAsBytesSync(bytes);
-         print('${temp.path}/tempImage');
-         Share.shareFiles(['${temp.path}/tempImage.jpg'], text: widget.snapshot.data()["about"],
-         subject:widget.snapshot.data()["name"] );
-         
-       }
+    final Directory temp = await getExternalStorageDirectory();
+    final File imageFile = File('${temp.path}/tempImage.jpg');
+    imageFile.writeAsBytesSync(bytes);
+    print('${temp.path}/tempImage');
+    Share.shareFiles(['${temp.path}/tempImage.jpg'], text: widget.snapshot.data()["about"],
+        subject:widget.snapshot.data()["name"] );
 
+  }
 
+updateRating()async{
+  await FirebaseFirestore.instance.collection(widget.user).doc(widget.snapshot.id)
+      .update({"myrating":ratingg.round()}).then((value) {})
+      .onError((error, stackTrace) {
+    print(error);
+  });
+}
 }

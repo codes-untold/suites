@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:provider/provider.dart';
 import 'package:suites/Screens/CardInfo.dart';
-import 'package:suites/Services/Listener.dart';
 import '../Services/constants.dart';
 
 class HotelCard extends StatefulWidget {
@@ -50,6 +48,8 @@ class _HotelCardState extends State<HotelCard> {
 
   IconData icon;
 
+
+
   @override
   void initState() {
 
@@ -69,9 +69,8 @@ class _HotelCardState extends State<HotelCard> {
     return GestureDetector(
       onTap: (){
         Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: CardInfo(
-        function: widget.function,snapshot: widget.snapshot,
-
-        ),duration: Duration(seconds: 1)));
+        function: widget.function,snapshot: widget.snapshot,user: widget.user,
+        ),duration: Duration(milliseconds: 500)));
 
       },
       child: Card(
@@ -138,7 +137,7 @@ class _HotelCardState extends State<HotelCard> {
                               Icon(Icons.star,size: 15,
                                 color: Colors.blue,),
                               SizedBox(width: 5.0,),
-                              Text("4.8 Ratings",style:
+                              Text("${widget.querySnapshot["rating"]} Ratings",style:
                               TextStyle(
                                   color: Colors.black54
                               ),)
@@ -171,8 +170,6 @@ class _HotelCardState extends State<HotelCard> {
       icon = Icons.favorite_rounded;
       print("on");
       widget.function("${widget.querySnapshot["name"]} Added to Favourites😀");
-      Provider.of<Data>(context,listen: false).likeMethod(widget.index);
-
       setState(() {
 
 
@@ -188,7 +185,6 @@ class _HotelCardState extends State<HotelCard> {
       icon = Icons.favorite_border_rounded;
       print("off");
       widget.function("${widget.querySnapshot["name"]} Removed from Favourites•	☹️");
-      Provider.of<Data>(context,listen: false).likeMethod(widget.index);
       setState(() {
 
       });
@@ -198,9 +194,6 @@ class _HotelCardState extends State<HotelCard> {
       ).update({"favourite": false});
     }
   }
-
-
-
 }
 
 
@@ -224,4 +217,8 @@ String fixPrice(String price){
   }
 
 
+}
+
+double toDecimal(value){
+  return value.roundToDouble();
 }

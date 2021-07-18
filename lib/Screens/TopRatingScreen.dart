@@ -1,31 +1,24 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suites/Networking/FireWorks.dart';
+import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Services/Listener.dart';
 import 'package:suites/Widgets/CalendarWidget.dart';
 import 'package:suites/Widgets/HotelCard.dart';
 import 'package:suites/Widgets/InfoColumn.dart';
 
 
-
-class Hotelpage extends StatefulWidget {
-
-  bool isFavouritePage;
-
-  Hotelpage({this.isFavouritePage});
+class TopRatingScreen extends StatefulWidget {
   @override
-  _HotelpageState createState() => _HotelpageState();
+  _TopRatingScreenState createState() => _TopRatingScreenState();
 }
 
-class _HotelpageState extends State<Hotelpage> {
+class _TopRatingScreenState extends State<TopRatingScreen> {
 
   SharedPreferences sharedPreferences;
   Map<String,dynamic> list = {};
@@ -41,41 +34,41 @@ class _HotelpageState extends State<Hotelpage> {
 
 
 
-    void onItemTapped(int index){
-  setState(() {
-    selectedIndex = index;
-  });
-}
-
-
-@override
-  void initState(){
-  super.initState();
-  getBoolToSF().then((value){
-  setState(() {
-    print(value);
-   user =  Provider.of<Data>(context,listen: false).userInfo?.uid ?? value[0];
-    username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
-    print(user);
-    FireWorks().addUser(user, list);
-
-
-  });
-});
+  void onItemTapped(int index){
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
 
-    @override
+  @override
+  void initState(){
+    super.initState();
+    getBoolToSF().then((value){
+      setState(() {
+        print(value);
+        user =  Provider.of<Data>(context,listen: false).userInfo?.uid ?? value[0];
+        username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
+        print(user);
+        FireWorks().addUser(user, list);
+      });
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
               Card(
                 elevation: 5,
-              shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-              10)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                        10)),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -88,8 +81,7 @@ class _HotelpageState extends State<Hotelpage> {
                             SizedBox(
                               width: 12.0,
                             ),
-                            Text(widget.isFavouritePage?
-                              "Favourites💙":DateTime.now().hour > 17? "Good Evening $username🌤":"Good Day $username🌤",
+                            Text("Top Rated 💫",
                               style: TextStyle(
                                   fontStyle: FontStyle.normal,
                                   fontWeight: FontWeight.w500,
@@ -103,35 +95,35 @@ class _HotelpageState extends State<Hotelpage> {
                           IconButton(
                             iconSize: 20.0,
                             icon: Icon( Icons.calendar_today_outlined
-                            ,color: Colors.blue,),
+                              ,color: Colors.blue,),
                             onPressed: (){
                               showModalBottomSheet(context: context,
                                   builder: (context)=> Container(height:MediaQuery.of(context).size.height *0.80 ,
                                       child: CalendarWidget(function: showInSnackBar,
-                                      result: (a,b){
-                                        setState(() {
-                                          checkIn = b;
-                                          checkOut = a;
-                                          multiplier = checkOut.day - checkIn.day;
-                                          multiplier_Check = true;
-                                        });
+                                        result: (a,b){
+                                          setState(() {
+                                            checkIn = b;
+                                            checkOut = a;
+                                            multiplier = checkOut.day - checkIn.day;
+                                            multiplier_Check = true;
+                                          });
 
-                                      },))
+                                        },))
                                   ,isScrollControlled: true);
                             },
                           ),],
                       ),
                     ),
-                  Divider(
-                    thickness: 1.0,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [InfoColumn(check: "Check in",month: getMonth(checkIn.month),day: checkIn.day),
-                       InfoColumn(check: "Lodge",month: "Single",),
-                      InfoColumn(check: "Check Out",month: getMonth(checkOut.month),day: checkOut.day,),
-                     ],
-                  ),
+                    Divider(
+                      thickness: 1.0,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [InfoColumn(check: "Check in",month: getMonth(checkIn.month),day: checkIn.day),
+                        InfoColumn(check: "Lodge",month: "Single",),
+                        InfoColumn(check: "Check Out",month: getMonth(checkOut.month),day: checkOut.day,),
+                      ],
+                    ),
                     SizedBox(
                       height: 10.0,
                     ),],
@@ -159,38 +151,34 @@ class _HotelpageState extends State<Hotelpage> {
                     itemBuilderType: PaginateBuilderType.listView,
                     itemBuilder: (index,context,documentsnapshot){
 
-                         if(documentsnapshot.data()["favourite"] == false){
-
-                         }
-                        return  Column(
-                          children: [
-                            HotelCard(querySnapshot: documentsnapshot.data(),index: index,user:user,function:
-                            showInSnackBar,snapshot: documentsnapshot,check: multiplier_Check,multiplier: multiplier,),
-                            SizedBox(
-                              height: 20,
-                            ) ],
-                        );
-
+                      return  Column(
+                        children: [
+                          HotelCard(querySnapshot: documentsnapshot.data(),index: index,user:user,function:
+                          showInSnackBar,snapshot: documentsnapshot,check: multiplier_Check,multiplier: multiplier,),
+                          SizedBox(
+                            height: 20,
+                          ) ],
+                      );
 
 
                     },
-                    query: widget.isFavouritePage?FirebaseFirestore.instance.collection(user)
-                        .orderBy("name").where("favourite",isEqualTo: true):
-                    FirebaseFirestore.instance.collection(user)
-                        .orderBy("name")
+                    query: FirebaseFirestore.instance.collection(user).orderBy("rating")
+                      .where("rating",isGreaterThan: 3)
                     ,
                     isLive: true,),
                 ),
               ),
             ],
           ),
-        );
+        ),
+      ),
+    );
   }
 
   void fetchPlaceHolder(){
     rootBundle.load("images/placeholder.png").then((value){
       setState(() {
-    //    this.imageData = value;
+        //    this.imageData = value;
       });
     }).catchError((error){print(error);});
   }
@@ -241,11 +229,5 @@ class _HotelpageState extends State<Hotelpage> {
       break;
     }
   }
-
-}
-Future <List<String>> getBoolToSF()async{
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  List <String> boolvalue = preferences.getStringList("UID");
-  return boolvalue;
 
 }

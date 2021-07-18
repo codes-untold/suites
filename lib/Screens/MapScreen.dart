@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:suites/Networking/FireWorks.dart';
 import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Services/Listener.dart';
 import 'package:suites/TestWidget.dart';
+import 'package:suites/Widgets/HotelCard.dart';
 
 class MapScreen extends StatefulWidget {
   @override
@@ -28,25 +31,38 @@ class _MapScreenState extends State<MapScreen> {
   GeoPoint latLng;
 
   List<QueryDocumentSnapshot> list = [];
+
   @override
   void initState() {
 
+    FireWorks().internetCheck().then((value) {
+      if(value == false){
+        Fluttertoast.showToast(
+            msg: "Turn on Internet Connection to view Map",
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.white,
+            fontSize: 12.0
+        );
+      }
+    });
     getBoolToSF().then((value){
-        print(value);
-        user =  Provider.of<Data>(context,listen: false).auth ?? value[0];
-        getCoords(user).then((value){
-          list.forEach((element) {
-            latLng = element.data()["coord"];
+      print(value);
+      user =  Provider.of<Data>(context,listen: false).auth ?? value[0];
+      getCoords(user).then((value){
+        list.forEach((element) {
+          latLng = element.data()["coord"];
 
-            allMarkers.add(Marker(
-                markerId: MarkerId(element.data()["name"]),
-                draggable: false,
-                infoWindow:
-                InfoWindow(title: element.data()["name"], snippet: element.data()["location"]),
-                position: LatLng(latLng.latitude,latLng.longitude)));
-            setState(() {});
-          });
+          allMarkers.add(Marker(
+              markerId: MarkerId(element.data()["name"]),
+              draggable: false,
+              infoWindow:
+              InfoWindow(title: element.data()["name"], snippet: element.data()["location"]),
+              position: LatLng(latLng.latitude,latLng.longitude)));
+          setState(() {});
         });
+      });
 
     });
 
@@ -69,7 +85,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         body: Stack(
           children: <Widget>[
             Container(
@@ -223,9 +239,8 @@ class _MapScreenState extends State<MapScreen> {
 
                                       itemSize: 15.0,
 
-                                      initialRating: 3,
+                                      initialRating: toDecimal(list[index].data()["myrating"]),
 
-                                      minRating: 1,
 
                                       direction: Axis.horizontal,
 

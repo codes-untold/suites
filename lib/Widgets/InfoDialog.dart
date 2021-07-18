@@ -41,7 +41,7 @@ class _InfoDialogState extends State<InfoDialog> {
           Expanded(
             flex: 4,
             child:  Image.asset(
-            "images/popimage.png",
+            "images/popimage2.png",
               fit: BoxFit.cover,
              //   width: double.infinity,
 

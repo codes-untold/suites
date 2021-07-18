@@ -136,7 +136,7 @@ class HomeOne extends StatelessWidget {
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [  Text("Book a Hotel",
+          children: [  Text("Search for Hotels",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 17.0
@@ -151,7 +151,7 @@ class HomeOne extends StatelessWidget {
             ),
             Text("Make suite Inquiries on the Go from "
                 "any location and get up to date info "
-                "on your desired suite",
+                "on your desired suite in Benin City",
               style: TextStyle(
                   fontSize: 13.5,
                   color: Colors.black45

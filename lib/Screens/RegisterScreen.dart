@@ -54,10 +54,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text("Create an Account!",
-                        style: TextStyle(
-                            fontSize: 18.0
-                        ),),
+                      Flexible(
+                        child: Text("Create an Account!",
+                          style: TextStyle(
+                              fontSize: 18.0
+                          ),),
+                      ),
                       SizedBox(
                         height: 20.0,
                       ),

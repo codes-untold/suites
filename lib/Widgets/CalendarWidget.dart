@@ -16,8 +16,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
 
   String user;
   DateTime focusedDay = DateTime.now();
-  DateTime RangeOne;
-  DateTime RangeTwo;
+  DateTime RangeOne = DateTime.now();
+  DateTime RangeTwo = DateTime.now();
   int i = 0;
 
   @override
@@ -135,7 +135,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                                 Navigator.pop(context);
                           }
                           else{
-                            widget.function("Wrong Date Formatting");
+                            if(RangeOne.day == RangeTwo.day){
+                              widget.function("Select more than one date");
+                            }else
+                            widget.function("Check out Date must come before Check in Date");
                           }
 
                         }
