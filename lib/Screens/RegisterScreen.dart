@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:suites/Networking/Authentication.dart';
 
 
 class RegisterScreen extends StatefulWidget {
@@ -94,7 +95,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             return "Email is required";
                           }
 
-                          if(!RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$').hasMatch(value)){
+                          if(!Authentication().checkEmail(value)){
                             return "Please enter a valid email address";
                           }
                           return null;

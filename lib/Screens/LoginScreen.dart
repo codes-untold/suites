@@ -7,6 +7,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:suites/Networking/Authentication.dart';
 import 'package:suites/Screens/ForgotScreen.dart';
 import 'package:suites/Screens/MainScreen.dart';
 import 'package:suites/Screens/RegisterScreen.dart';
@@ -41,13 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
-  addBoolToSF()async{
-      List <String> list = [_auth.currentUser.uid,_auth.currentUser.displayName];
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-      preferences.setStringList("UID", list);
-      preferences.setBool("boolvalue", true);
-
-  }
 
 
   @override
@@ -81,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           return "Email is required";
                         }
 
-                        if(!RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$').hasMatch(value)){
+                        if(!Authentication().checkEmail(value)){
                           return "Please enter a valid email address";
                         }
                         return null;
@@ -148,13 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Text("Forgot Password?",
                         textAlign: TextAlign.right,),
                       ),
+
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     RaisedButton(
                       onPressed: (){
-                      authenticate();
+                      login(email, password);
                       },
                       padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
                       child: Text("Sign in",
@@ -189,8 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void authenticate()async{
-
+  void login(email,password)async{
     if(!_formkey.currentState.validate()){
       return;
     }
@@ -200,57 +194,20 @@ class _LoginScreenState extends State<LoginScreen> {
       loading = true;
     });
 
-
-    try {
-      final newUser = await  _auth.signInWithEmailAndPassword(email: email, password: password);
-      if(newUser != null){
-        setState(() {
-          loading = false;
-        });
-        if(newUser.user.emailVerified){
-          addBoolToSF();
-          print(_auth.currentUser.uid);
-          Provider.of<Data>(context,listen: false).updateUser(_auth.currentUser);
-          Navigator.push(context,PageTransition(type: PageTransitionType.fade,child: MainScreen()));
-        }
-        else{
-          Fluttertoast.showToast(
-              msg: "Email not verified",
-              toastLength: Toast.LENGTH_LONG,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              textColor: Colors.white,
-              fontSize: 12.0
-          );
-        }
-
-      }
-    }  catch (e) {
+    await Authentication().loginUser(email, password,context).then((value){
       setState(() {
         loading = false;
-      });
-      print(e.toString());
-      if(e.toString().contains("WRONG_PASSWORD")){
-        Fluttertoast.showToast(
-            msg: "Wrong Password",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            textColor: Colors.white,
-            fontSize: 12.0
-        );
 
-      }
-      if(e.toString().contains("USER_NOT_FOUND")){
-        Fluttertoast.showToast(
-            msg: "User not Found",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            textColor: Colors.white,
-            fontSize: 12.0
-        );
-      }
-    }
+      });
+    });
   }
+}
+
+
+addBoolToSF(_auth)async{
+  List <String> list = [_auth.currentUser.uid,_auth.currentUser.displayName];
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  preferences.setStringList("UID", list);
+  preferences.setBool("boolvalue", true);
+
 }

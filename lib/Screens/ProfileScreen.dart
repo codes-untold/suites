@@ -300,9 +300,6 @@ class RoundContainer extends StatelessWidget {
 
 
   }
-
-
-
 }
 
 dialogFunction(BuildContext context){
