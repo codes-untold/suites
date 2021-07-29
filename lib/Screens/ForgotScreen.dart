@@ -71,49 +71,8 @@ class _ForgotScreenState extends State<ForgotScreen> {
                       height: 10.0,
                     ),
                     RaisedButton(
-                      onPressed: ()async{
-
-                        if(!_formkey.currentState.validate()){
-                          return;
-                        }
-
-                        _formkey.currentState.save();
-                        setState(() {
-                          loading = true;
-                        });
-
-                        try {
-                          await  _auth.sendPasswordResetEmail(email: email);
-                          setState(() {
-                            loading = false;
-                          });
-
-                          Fluttertoast.showToast(
-                              msg: "Reset link has been sent to your email",
-                              toastLength: Toast.LENGTH_LONG,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              textColor: Colors.white,
-                              fontSize: 12.0
-                          );
-                        } on Exception catch (e) {
-
-                          if(e.toString().contains("USER_NOT_FOUND")){
-                            setState(() {
-                              loading = false;
-                            });
-
-                            Fluttertoast.showToast(
-                                msg: "User not Found",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                textColor: Colors.white,
-                                fontSize: 12.0
-                            );
-                          }
-
-                        }
+                      onPressed: (){
+                        resetEmail(email);
                       },
                       padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
                       child: Text("Reset Password",
@@ -146,6 +105,23 @@ class _ForgotScreenState extends State<ForgotScreen> {
         ),
       ),
     );
+  }
+
+  resetEmail(email)async{
+    if(!_formkey.currentState.validate()){
+      return;
+    }
+
+    _formkey.currentState.save();
+    setState(() {
+      loading = true;
+    });
+
+    Authentication().resetEmail(email).then((value){
+      setState(() {
+        loading = false;
+      });
+    });
   }
 }
 

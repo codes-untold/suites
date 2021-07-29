@@ -34,7 +34,7 @@ class _CardInfoState extends State<CardInfo> {
   @override
   void initState() {
 
-    ratingg = toDecimal(widget.snapshot.data()["myrating"]);
+    ratingg = toDecimal(widget.snapshot.data()["myrating"]??0);
 
     item = widget.snapshot.data()["Imagelist"];
     itemo = widget.snapshot.data()["features"];

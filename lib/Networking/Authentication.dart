@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
@@ -20,9 +21,15 @@ Future <void> createUser(username,email,password)async{
     UserCredential newUser = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
     if(newUser != null){
       await newUser.user.updateDisplayName(username).then((value)async{
-        await newUser.user.sendEmailVerification().then((value){
-          services.displayToast("Please check your email for verification");
-        });
+        CollectionReference users = FirebaseFirestore.instance.collection(_auth.currentUser.uid);
+        await users.doc(_auth.currentUser.uid).set({"id":_auth.currentUser.uid})
+            .then((value)async {
+          await newUser.user.sendEmailVerification().then((value){
+            services.displayToast("Please check your email for verification");
+          });
+        })
+            .catchError((error){print(error);});
+
       });
 
     }

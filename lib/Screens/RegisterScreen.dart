@@ -154,73 +154,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 10.0,
                       ),
                       RaisedButton(
-                        onPressed: ()async{
-
-                          if(!_formkey.currentState.validate()){
-                            return;
-                          }
-
-                          _formkey.currentState.save();
-                          setState(() {
-                            loading = true;
-                          });
-
-                         try {
-                           UserCredential newUser = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
-
-
-                       if(newUser != null){
-
-                       await  _auth.currentUser.updateDisplayName(username);
-                         print(_auth.currentUser.uid);
-                        CollectionReference users = FirebaseFirestore.instance.collection(_auth.currentUser.uid);
-                        await users.doc(_auth.currentUser.uid).set({"id":_auth.currentUser.uid})
-                        .then((value) => print("user added"))
-                         .catchError((error){print(error);});
-
-                      await newUser.user.sendEmailVerification();
-
-                      setState(() {
-                           loading = false;
-                         });
-                         Fluttertoast.showToast(
-                             msg: "Please check your email for verification",
-                             toastLength: Toast.LENGTH_LONG,
-                             gravity: ToastGravity.BOTTOM,
-                             timeInSecForIosWeb: 1,
-                             textColor: Colors.white,
-                             fontSize: 12.0
-                         );
-                       }
-
-                         }  catch (e) {
-                           setState(() {
-                             loading = false;
-                           });
-                          print(e.toString());
-                          if(e.toString().contains("EMAIL_ALREADY_IN_USE")){
-                            Fluttertoast.showToast(
-                                msg: "Email already exists",
-                                toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                textColor: Colors.white,
-                                fontSize: 12.0
-                            );
-                          }
-
-                           if(e.toString().contains("NETWORK_REQUEST_FAILED")){
-                             Fluttertoast.showToast(
-                                 msg: "Network problem occured",
-                                 toastLength: Toast.LENGTH_LONG,
-                                 gravity: ToastGravity.BOTTOM,
-                                 timeInSecForIosWeb: 1,
-                                 textColor: Colors.white,
-                                 fontSize: 12.0
-                             );
-                           }
-
-                         }
+                        onPressed: (){
+                          createUser(username, email, password);
                         },
                         padding: EdgeInsets.only(top: 10.0,bottom: 10.0),
                         child: Text("Sign Up",
@@ -251,6 +186,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
 
       ));
+  }
+
+
+  createUser(String username,email,password)async{
+    if(!_formkey.currentState.validate()){
+      return;
+    }
+
+    _formkey.currentState.save();
+    setState(() {
+      loading = true;
+    });
+    await Authentication().createUser(username, email, password).then((value){
+      setState(() {
+        loading = false;
+      });
+    });
   }
 }
 
