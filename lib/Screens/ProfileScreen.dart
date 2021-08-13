@@ -1,6 +1,4 @@
 import 'dart:typed_data';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +48,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size.height;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: logo != null ?SafeArea(
@@ -119,7 +119,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
 
-                SizedBox(height: 35,),
+                SizedBox(height: screenSize * 0.0465,),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.7,
                   child: Column(
@@ -130,7 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           dialogFunction(context);
 
                         },),
-                      SizedBox(height: 30,),
+                      SizedBox(height: screenSize * 0.0398 ,),
 
                       InfoTile(name: "Favourites",color1: Colors.orange[100],
                           color2: Colors.deepOrangeAccent,data: Icons.favorite,function: (){
@@ -139,7 +139,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }));
                         },),
 
-                      SizedBox(height: 30,),
+                      SizedBox(height: screenSize * 0.0398 ,),
 
                       InfoTile(name: "Top Ratings",color1: Colors.blue[50],
                           color2: Colors.blue,data: Icons.star,function: (){
@@ -148,8 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           }));
                         },),
 
-                      SizedBox(height: 50,),
-                      SizedBox(height: 20,),
+                      SizedBox(height: screenSize * 0.093,),
 
                       OutlinedButton(onPressed: (){
                         signOut();
