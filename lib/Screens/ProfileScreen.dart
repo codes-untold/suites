@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             border: Border.all(width: 2,color: Colors.blue)
                         ),
                         child: CircleAvatar(
-                            backgroundImage: AssetImage("images/placeholder.jpeg"),
+                            backgroundImage: AssetImage("images/avatar.jpg"),
                             radius:  MediaQuery.of(context).size.width * 0.1388,
                             backgroundColor: Colors.white
                         ),
