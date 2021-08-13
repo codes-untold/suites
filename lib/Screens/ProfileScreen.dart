@@ -21,7 +21,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  ImageProvider logo = AssetImage("images/backdrop2.jpg");
+  ImageProvider logo;
   String username;
   final _auth = FirebaseAuth.instance;
   bool loading = false;
@@ -37,6 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
+   logo = AssetImage("images/backdrop2.jpg");
     getBoolToSF().then((value){
       setState(() {
         print(value);
