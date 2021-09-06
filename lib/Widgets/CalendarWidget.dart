@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../Services.dart';
+
 class CalendarWidget extends StatefulWidget {
 
   Function function;
-
   Function result;
 
   CalendarWidget({this.function,this.result});
@@ -42,7 +43,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         fontSize: 12.0
                       ),),
                     Row(children: [
-                      Text(RangeOne != null ? "${getMonth(RangeOne.month)} ${RangeOne.day}": "${getMonth(DateTime.now().month)} ${DateTime.now().day}",
+                      Text(RangeOne != null ? "${Services().getMonth(RangeOne.month)} ${RangeOne.day}": "${Services().getMonth(DateTime.now().month)} ${DateTime.now().day}",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0
@@ -59,7 +60,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                         width: 5,
                       ),
 
-                      Text( RangeTwo != null  ? "${getMonth(RangeTwo.month)} ${RangeTwo.day}":"${getMonth(DateTime.now().month)} ${DateTime.now().day}",
+                      Text( RangeTwo != null  ? "${Services().getMonth(RangeTwo.month)} ${RangeTwo.day}":"${Services().getMonth(DateTime.now().month)} ${DateTime.now().day}",
                           style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0
@@ -125,6 +126,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     GestureDetector(
                       onTap: (){
 
+                        if(RangeOne == DateTime.now() && RangeTwo ==DateTime.now()){
+                          Navigator.pop(context);
+                        }
+
                         if(RangeOne.month > RangeTwo.month ){
                           widget.function("Duration should not exceed thirty days");
                         }
@@ -167,47 +172,6 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         ),
       ),
     );
-  }
-
-
-  String getMonth(int date){
-    switch(date){
-      case 1: return "JAN";
-      break;
-
-      case 2: return "FEB";
-      break;
-
-      case 3: return "MAR";
-      break;
-
-      case 4: return "APR";
-      break;
-
-      case 5: return "MAY";
-      break;
-
-      case 6: return "JUN";
-      break;
-
-      case 7: return "JULY";
-      break;
-
-      case 8: return "AUG";
-      break;
-
-      case 9: return "SEP";
-      break;
-
-      case 10: return "OCT";
-      break;
-
-      case 11: return "NOV";
-      break;
-
-      case 12: return "DEC";
-      break;
-    }
   }
 
 }

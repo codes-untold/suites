@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:suites/Networking/FireWorks.dart';
 import 'package:suites/Screens/Hotelpage.dart';
+import 'package:suites/Services.dart';
 import 'package:suites/Services/Listener.dart';
 import 'package:suites/TestWidget.dart';
 import 'package:suites/Widgets/HotelCard.dart';
@@ -19,32 +20,19 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
 
   GoogleMapController _controller;
-
   List<Marker> allMarkers = [];
-
   PageController _pageController;
-
   int prevPage;
-
   String user;
-
   GeoPoint latLng;
-
   List<QueryDocumentSnapshot> list = [];
 
   @override
   void initState() {
-
+    super.initState();
     FireWorks().internetCheck().then((value) {
       if(value == false){
-        Fluttertoast.showToast(
-            msg: "Turn on Internet Connection to view Map",
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            timeInSecForIosWeb: 1,
-            textColor: Colors.white,
-            fontSize: 12.0
-        );
+        Services().displayToast("Turn on Internet Connection to view Map");
       }
     });
     getBoolToSF().then((value){
@@ -53,7 +41,6 @@ class _MapScreenState extends State<MapScreen> {
       getCoords(user).then((value){
         list.forEach((element) {
           latLng = element.data()["coord"];
-
           allMarkers.add(Marker(
               markerId: MarkerId(element.data()["name"]),
               draggable: false,
@@ -63,16 +50,12 @@ class _MapScreenState extends State<MapScreen> {
           setState(() {});
         });
       });
-
     });
-
-
-
-    super.initState();
-
     _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
       ..addListener(_onScroll);
   }
+
+
 
   void _onScroll() {
     if (_pageController.page.toInt() != prevPage) {
@@ -160,7 +143,6 @@ class _MapScreenState extends State<MapScreen> {
       },
       child: InkWell(
           onTap: () {
-            // moveCamera();
           },
           child: Stack(children: [
             Center(
@@ -275,7 +257,5 @@ class _MapScreenState extends State<MapScreen> {
       }
       );
     });
-    print(list);
-    print("gcghncnhcyhcmh");
   }
 }

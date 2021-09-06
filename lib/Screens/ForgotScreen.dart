@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Screens/RegisterScreen.dart';
 import 'package:suites/Networking/Authentication.dart';
+
+import 'RegisterScreen.dart';
 
 
 class ForgotScreen extends StatefulWidget {
@@ -13,7 +13,6 @@ class ForgotScreen extends StatefulWidget {
 }
 
 class _ForgotScreenState extends State<ForgotScreen> {
-  final _auth = FirebaseAuth.instance;
   bool loading = false;
   String email;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
@@ -21,6 +20,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: ModalProgressHUD(
           inAsyncCall: loading,

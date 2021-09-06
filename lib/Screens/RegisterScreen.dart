@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:suites/Networking/Authentication.dart';
 
 
@@ -18,7 +17,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String username;
   String email;
   String password;
-  final _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
   bool textCheck = false;
   bool wordCheck = false;
@@ -43,6 +41,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
           child: ModalProgressHUD(
             inAsyncCall: loading,

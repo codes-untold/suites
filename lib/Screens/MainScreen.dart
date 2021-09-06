@@ -27,15 +27,21 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    precacheImage(AssetImage("images/backdrop2.jpg"), context);
     return Scaffold(
-    //  backgroundColor: Colors.white,
       body: SafeArea(child: widgets[selectedIndex]),
       bottomNavigationBar: BottomNavigationBar(
- //       backgroundColor: Colors.white,
         items: const <BottomNavigationBarItem>
         [BottomNavigationBarItem(icon: Icon(Icons.home,size: 20.0,),label: "home"),
           BottomNavigationBarItem(icon: Icon(Icons.location_on_outlined,size: 20.0,),label: "location"),

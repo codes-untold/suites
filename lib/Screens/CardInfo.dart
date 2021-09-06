@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:suites/Widgets/HotelCard.dart';
+
+import '../Services.dart';
 
 
 class CardInfo extends StatefulWidget {
@@ -146,7 +147,7 @@ class _CardInfoState extends State<CardInfo> {
                             Image.asset("images/nairasign.png",
                               width: 15.0,
                               height: 15.0,),
-                            Text(fixPrice(widget.snapshot.data()["price"].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
+                            Text(Services().fixPrice(widget.snapshot.data()["price"].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
                           ],)
 
                         ],

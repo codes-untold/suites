@@ -21,26 +21,29 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  ImageProvider logo;
+  Image logo,logo2;
   String username;
   final _auth = FirebaseAuth.instance;
   bool loading = false;
   bool screenLoading= false;
   Uint8List imageData;
+  Data provider;
 
 
   @override
   void didChangeDependencies() {
-    precacheImage(logo, context);
+    precacheImage(logo.image, context);
+    precacheImage(logo2.image, context);
     super.didChangeDependencies();
   }
 
   @override
   void initState() {
-   logo = AssetImage("images/backdrop2.jpg");
+   logo = Image.asset("images/backdrop2.jpg",gaplessPlayback: true,);
+   logo2 = Image.asset("images/avatar.jpg",gaplessPlayback: true,);
+
     getBoolToSF().then((value){
       setState(() {
-        print(value);
         username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
       });
     });
@@ -64,7 +67,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   alignment: AlignmentDirectional.topStart,
                   children: [
                     Container(
-                      child: Image(image: logo,),
+                      child: Image(image: logo.image,gaplessPlayback: true,),
                       margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height *0.07978),
                     ),
                     Positioned(
@@ -78,7 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             border: Border.all(width: 2,color: Colors.blue)
                         ),
                         child: CircleAvatar(
-                            backgroundImage: AssetImage("images/avatar.jpg"),
+                            backgroundImage: logo2.image,
+                           // child:Image(image: logo2.image,gaplessPlayback: true,),
                             radius:  MediaQuery.of(context).size.width * 0.1388,
                             backgroundColor: Colors.white
                         ),

@@ -9,7 +9,7 @@ class Data extends ChangeNotifier{
 
 String auth;
 User userInfo;
-ImageProvider logo;
+
 
   void updateText(String text){
    auth = text;
@@ -19,7 +19,7 @@ ImageProvider logo;
 void updateUser(User user){
     userInfo = user;
     notifyListeners();
-}
 
+}
 
 }

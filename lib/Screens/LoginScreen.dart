@@ -23,7 +23,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   List <Map<String,dynamic>> list = [];
   bool _obscureText = true;
-  final _auth = FirebaseAuth.instance;
   String password;
   String email;
   bool loading = false;
@@ -42,11 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: ModalProgressHUD(
           inAsyncCall: loading,

@@ -48,6 +48,7 @@ class FireWorks {
     }
   }
 
+
   Future <bool> internetCheck() async {
     try {
       final result = await InternetAddress.lookup('example.com');

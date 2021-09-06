@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:suites/Screens/CardInfo.dart';
+import 'package:suites/Services.dart';
 import '../Services/constants.dart';
 
 class HotelCard extends StatefulWidget {
+
    HotelCard({
     Key key,
     @required this.querySnapshot,
@@ -47,8 +49,6 @@ class HotelCard extends StatefulWidget {
 class _HotelCardState extends State<HotelCard> {
 
   IconData icon;
-
-
 
   @override
   void initState() {
@@ -100,12 +100,11 @@ class _HotelCardState extends State<HotelCard> {
                       Text(widget.querySnapshot["name"],
                           style: Constants.hotelText),
                       Row(children: [
-
                         Image.asset("images/nairasign.png",
                           width: 15.0,
                           height: 15.0,),
-                        Text(widget.check == false? fixPrice(widget.querySnapshot["price"].toString()):
-                            fixPrice( (widget.querySnapshot["price"] * widget.multiplier).toString()),
+                        Text(widget.check == false? Services().fixPrice(widget.querySnapshot["price"].toString()):
+                        Services().fixPrice( (widget.querySnapshot["price"] * widget.multiplier).toString()),
                             style: Constants.hotelText),
                       ],),
 
@@ -146,11 +145,7 @@ class _HotelCardState extends State<HotelCard> {
                         ],
                       ),
                       GestureDetector(
-                        onTap: () {
-
-                         work();
-
-                        },
+                        onTap: updateFavouriteIcon,
                         child: Icon(icon,
                           color: Colors.blue,),
                       )
@@ -164,16 +159,14 @@ class _HotelCardState extends State<HotelCard> {
     );
   }
 
-  void work()async{
+  void updateFavouriteIcon()async{
 
-    if (  icon == Icons.favorite_border_rounded) {
+    if (icon == Icons.favorite_border_rounded) {
       icon = Icons.favorite_rounded;
-      print("on");
       widget.function("${widget.querySnapshot["name"]} Added to Favourites😀");
       setState(() {
-
-
       });
+
       await FirebaseFirestore.instance.collection(
           widget.user).doc(
           widget.snapshot.id
@@ -183,7 +176,6 @@ class _HotelCardState extends State<HotelCard> {
 
     else {
       icon = Icons.favorite_border_rounded;
-      print("off");
       widget.function("${widget.querySnapshot["name"]} Removed from Favourites•	☹️");
       setState(() {
 
@@ -194,29 +186,6 @@ class _HotelCardState extends State<HotelCard> {
       ).update({"favourite": false});
     }
   }
-}
-
-
-String fixPrice(String price){
-  switch (price.length) {
-    case 4:
-      return "${price.substring(0, 1)},${price.substring(1, 4)}";
-      break;
-
-    case 5:
-      return "${price.substring(0, 2)},${price.substring(2, 5)}";
-      break;
-
-    case 6:
-      return "${price.substring(0, 3)},${price.substring(3, 6)}";
-      break;
-
-    case 7:
-      return "${price.substring(0,1)},${price.substring(1, 4)},${price.substring(4, 7)}";
-
-  }
-
-
 }
 
 double toDecimal(value){

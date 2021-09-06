@@ -2,8 +2,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +11,8 @@ import 'package:suites/Services/Listener.dart';
 import 'package:suites/Widgets/CalendarWidget.dart';
 import 'package:suites/Widgets/HotelCard.dart';
 import 'package:suites/Widgets/InfoColumn.dart';
+
+import '../Services.dart';
 
 
 
@@ -107,7 +107,9 @@ class _HotelpageState extends State<Hotelpage> {
                             onPressed: (){
                               showModalBottomSheet(context: context,
                                   builder: (context)=> Container(height:MediaQuery.of(context).size.height *0.80 ,
-                                      child: CalendarWidget(function: showInSnackBar,
+                                      child: CalendarWidget(function:(String text){
+                                        Services().showInSnackBar(text, context);
+                                      },
                                       result: (a,b){
                                         setState(() {
                                           checkIn = b;
@@ -127,9 +129,9 @@ class _HotelpageState extends State<Hotelpage> {
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [InfoColumn(check: "Check in",month: getMonth(checkIn.month),day: checkIn.day),
+                    children: [InfoColumn(check: "Check in",month: Services().getMonth(checkIn.month),day: checkIn.day),
                        InfoColumn(check: "Lodge",month: "Single",),
-                      InfoColumn(check: "Check Out",month: getMonth(checkOut.month),day: checkOut.day,),
+                      InfoColumn(check: "Check Out",month: Services().getMonth(checkOut.month),day: checkOut.day,),
                      ],
                   ),
                     SizedBox(
@@ -160,24 +162,22 @@ class _HotelpageState extends State<Hotelpage> {
                     itemBuilder: (index,context,documentsnapshot){
 
                          if(documentsnapshot.data()["favourite"] == false){
-
                          }
                         return  Column(
                           children: [
-                            HotelCard(querySnapshot: documentsnapshot.data(),index: index,user:user,function:
-                            showInSnackBar,snapshot: documentsnapshot,check: multiplier_Check,multiplier: multiplier,),
+                            HotelCard(querySnapshot: documentsnapshot.data(),index: index,user:user,function:(String text){
+                              Services().showInSnackBar(text,context);
+                      }
+                           ,snapshot: documentsnapshot,check: multiplier_Check,multiplier: multiplier,),
                             SizedBox(
                               height: 20,
                             ) ],
                         );
 
-
-
                     },
                     query: widget.isFavouritePage?FirebaseFirestore.instance.collection(user)
                         .orderBy("name").where("favourite",isEqualTo: true):
-                    FirebaseFirestore.instance.collection(user)
-                        .orderBy("name")
+                    FirebaseFirestore.instance.collection(user).orderBy("name")
                     ,
                     isLive: true,),
                 ),
@@ -185,61 +185,6 @@ class _HotelpageState extends State<Hotelpage> {
             ],
           ),
         );
-  }
-
-  void fetchPlaceHolder(){
-    rootBundle.load("images/placeholder.png").then((value){
-      setState(() {
-    //    this.imageData = value;
-      });
-    }).catchError((error){print(error);});
-  }
-
-
-
-  showInSnackBar(String text){
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-  }
-
-
-  String getMonth(int date){
-    switch(date){
-      case 1: return "JAN";
-      break;
-
-      case 2: return "FEB";
-      break;
-
-      case 3: return "MAR";
-      break;
-
-      case 4: return "APR";
-      break;
-
-      case 5: return "MAY";
-      break;
-
-      case 6: return "JUN";
-      break;
-
-      case 7: return "JULY";
-      break;
-
-      case 8: return "AUG";
-      break;
-
-      case 9: return "SEP";
-      break;
-
-      case 10: return "OCT";
-      break;
-
-      case 11: return "NOV";
-      break;
-
-      case 12: return "DEC";
-      break;
-    }
   }
 
 }
