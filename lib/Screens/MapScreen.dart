@@ -5,11 +5,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:suites/Networking/FireWorks.dart';
+import 'package:suites/Networking/FireBaseWorks.dart';
 import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Services.dart';
 import 'package:suites/Services/Listener.dart';
-import 'package:suites/TestWidget.dart';
+
 import 'package:suites/Widgets/HotelCard.dart';
 
 class MapScreen extends StatefulWidget {

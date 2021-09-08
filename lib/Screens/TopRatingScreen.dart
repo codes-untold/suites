@@ -4,7 +4,7 @@ import 'package:paginate_firestore/bloc/pagination_listeners.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:suites/Networking/FireWorks.dart';
+import 'package:suites/Networking/FireBaseWorks.dart';
 import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Services/Listener.dart';
 import 'package:suites/Widgets/CalendarWidget.dart';
