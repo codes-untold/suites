@@ -7,6 +7,7 @@ import 'package:suites/Screens/HomeScreen.dart';
 import 'package:suites/Screens/LoginScreen.dart';
 import 'package:suites/Screens/MainScreen.dart';
 import 'Services/Listener.dart';
+import 'Services/Services.dart';
 
 
 
@@ -19,15 +20,8 @@ Future <void> main()async {
   runApp(ChangeNotifierProvider<Data>(
     create:(context) => Data(),
     child: MaterialApp(
-       home: await getBoolToSF()? MainScreen(): HomeScreen(),
+       home: await Services().getBoolToSF()? MainScreen(): HomeScreen(),
       debugShowCheckedModeBanner: false,
     ),
   ));
-}
-
-getBoolToSF()async{
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  bool boolvalue = preferences.getBool("boolvalue")?? false;
-  return boolvalue;
-
 }

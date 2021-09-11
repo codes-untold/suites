@@ -15,7 +15,7 @@ class ForgotScreen extends StatefulWidget {
 class _ForgotScreenState extends State<ForgotScreen> {
   bool loading = false;
   String email;
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class _ForgotScreenState extends State<ForgotScreen> {
             padding: const EdgeInsets.all(15.0),
             child: Center(
               child: Form(
-                key:  _formkey,
+                key:  _formKey,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -107,12 +107,13 @@ class _ForgotScreenState extends State<ForgotScreen> {
     );
   }
 
+  //handle operations when user clicks on reset button
   resetEmail(email)async{
-    if(!_formkey.currentState.validate()){
+    if(!_formKey.currentState.validate()){
       return;
     }
 
-    _formkey.currentState.save();
+    _formKey.currentState.save();
     setState(() {
       loading = true;
     });

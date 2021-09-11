@@ -3,19 +3,23 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FireWorks {
+class FireBaseWorks {
 
 
-  Future <void> addUser(String user, Map<String, dynamic> list) async {
+
+  //fetches existing user data from firebase fireStore or creates if not existing
+  Future <void> getUserData(String user, Map<String, dynamic> list) async {
     int a = 0;
-    var res = await FirebaseFirestore.instance.doc("$user/${user}1").get();
-
-    if (res.exists) {
+    var userDocument = await FirebaseFirestore.instance.doc("$user/${user}1").get();
+    //if user document already exists, fetch documents from general list of courses
+    //to add new courses to exisiting user's collection
+    if (userDocument.exists) {
       print("exists");
       await FirebaseFirestore.instance.collection("hotels").get().then((
           QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((element) async {
           list = element.data();
+          //Remove user specific fields to avoid overiding fields in user documents
           list.removeWhere((key, value) => key == "favourite");
           list.removeWhere((key, value) => key == "myrating");
 
@@ -32,7 +36,8 @@ class FireWorks {
     }
 
     else {
-      print("doesnt exist");
+      //if user document does not exist,fetch all item from general course list
+      // and update user collection
       await FirebaseFirestore.instance.collection("hotels").get().then((
           QuerySnapshot querySnapshot) {
         querySnapshot.docs.forEach((element) async {

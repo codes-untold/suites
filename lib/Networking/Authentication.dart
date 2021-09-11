@@ -6,7 +6,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:provider/provider.dart';
 import 'package:suites/Screens/LoginScreen.dart';
 import 'package:suites/Screens/MainScreen.dart';
-import 'package:suites/Services.dart';
+import 'file:///C:/Users/xeroes/AndroidStudioProjects/suites/lib/Services/Services.dart';
 import 'package:suites/Services/Listener.dart';
 
 class Authentication{
@@ -15,7 +15,7 @@ class Authentication{
 
 
 
-
+//create user account on firebase
 Future <void> createUser(username,email,password)async{
   try {
     UserCredential newUser = await  _auth.createUserWithEmailAndPassword(email: email, password: password);
@@ -46,7 +46,7 @@ Future <void> createUser(username,email,password)async{
 }
 
 
-
+  //check for wrong email formatting
   bool checkEmail(String value){
     if(!RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$').hasMatch(value)){
       return false;
@@ -56,7 +56,7 @@ Future <void> createUser(username,email,password)async{
     }
       }
 
-
+  //login user into app
       Future <void> loginUser(String email,password,context)async{
 
         try {
@@ -91,6 +91,7 @@ Future <void> createUser(username,email,password)async{
         }
       }
 
+      //Sends user email for password reset
       Future <void> resetEmail(email)async{
         try {
           await  _auth.sendPasswordResetEmail(email: email);

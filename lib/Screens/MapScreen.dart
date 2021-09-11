@@ -2,13 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:suites/Networking/FireBaseWorks.dart';
-import 'package:suites/Screens/Hotelpage.dart';
-import 'package:suites/Services.dart';
 import 'package:suites/Services/Listener.dart';
+import 'package:suites/Services/Services.dart';
+import 'package:suites/Services/constants.dart';
 
 import 'package:suites/Widgets/HotelCard.dart';
 
@@ -30,27 +29,12 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    FireWorks().internetCheck().then((value) {
+    FireBaseWorks().internetCheck().then((value) {
       if(value == false){
         Services().displayToast("Turn on Internet Connection to view Map");
       }
     });
-    getBoolToSF().then((value){
-      print(value);
-      user =  Provider.of<Data>(context,listen: false).auth ?? value[0];
-      getCoords(user).then((value){
-        list.forEach((element) {
-          latLng = element.data()["coord"];
-          allMarkers.add(Marker(
-              markerId: MarkerId(element.data()["name"]),
-              draggable: false,
-              infoWindow:
-              InfoWindow(title: element.data()["name"], snippet: element.data()["location"]),
-              position: LatLng(latLng.latitude,latLng.longitude)));
-          setState(() {});
-        });
-      });
-    });
+   initiateMapData();
     _pageController = PageController(initialPage: 1, viewportFraction: 0.8)
       ..addListener(_onScroll);
   }
@@ -72,14 +56,8 @@ class _MapScreenState extends State<MapScreen> {
         body: Stack(
           children: <Widget>[
             Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height - 50.0,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
+              height: MediaQuery.of(context).size.height - 50.0,
+              width: MediaQuery.of(context).size.width,
               child: GoogleMap(
                 initialCameraPosition: CameraPosition(
                     target: LatLng(6.3350, 5.6037), zoom: 15.0),
@@ -91,10 +69,7 @@ class _MapScreenState extends State<MapScreen> {
               bottom: 20.0,
               child: Container(
                 height: 200.0,
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width,
+                width: MediaQuery.of(context).size.width,
                 child: PageView.builder(
                   controller: _pageController,
                   itemCount: list.length,
@@ -116,7 +91,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   moveCamera() {
-    GeoPoint geoPoint = list[_pageController.page.toInt()].data()["coord"];
+    GeoPoint geoPoint = list[_pageController.page.toInt()].data()[Constants.HOTEL_COORDINATES];
     _controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         target: LatLng(geoPoint.latitude,geoPoint.longitude),
         zoom: 15.0,
@@ -175,9 +150,7 @@ class _MapScreenState extends State<MapScreen> {
                                       bottomLeft: Radius.circular(10.0),
                                       topLeft: Radius.circular(10.0)),
                                   image: DecorationImage(
-                                      image: NetworkImage(
-
-                                          list[index].data()["image"]),
+                                      image: NetworkImage(list[index].data()[Constants.HOTEL_IMAGE]),
                                       fit: BoxFit.cover))),
                           SizedBox(width: 5.0),
                           Flexible(
@@ -188,10 +161,10 @@ class _MapScreenState extends State<MapScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      list[index].data()["name"].toString().length > 23 ?
-                                      "${  list[index].data()["name"].toString().substring(
+                                      list[index].data()[Constants.HOTEL_NAME].toString().length > 23 ?
+                                      "${  list[index].data()[Constants.HOTEL_NAME].toString().substring(
                                           0, 20)}..." :
-                                      list[index].data()["name"].toString(),
+                                      list[index].data()[Constants.HOTEL_NAME].toString(),
                                       style: TextStyle(
                                           color: Colors.black54,
                                           fontWeight: FontWeight.bold,
@@ -205,10 +178,10 @@ class _MapScreenState extends State<MapScreen> {
                                       children: [
                                         Icon(Icons.location_on, size: 16.0,
                                             color: Colors.black87),
-                                        Text(   list[index].data()["location"].toString().length > 23 ?
-                                        "${  list[index].data()["location"].toString().substring(
+                                        Text(   list[index].data()[Constants.HOTEL_LOCATION].toString().length > 23 ?
+                                        "${  list[index].data()[Constants.HOTEL_LOCATION].toString().substring(
                                             0, 20)}..." :
-                                        list[index].data()["location"].toString(),
+                                        list[index].data()[Constants.HOTEL_LOCATION].toString(),
                                           style: TextStyle(
                                               fontSize: 10.0,
                                               fontWeight: FontWeight.w600),),
@@ -218,25 +191,14 @@ class _MapScreenState extends State<MapScreen> {
                                     ),
                                     RatingBar.builder(
                                       onRatingUpdate: null,
-
                                       itemSize: 15.0,
-
-                                      initialRating: toDecimal(list[index].data()["myrating"]),
-
-
+                                      initialRating: toDecimal(list[index].data()[Constants.USER_RATING]),
                                       direction: Axis.horizontal,
-
                                       allowHalfRating: false,
-
                                       itemCount: 5,
-
                                       itemBuilder: (context, _) =>
-                                          Icon(
-
-                                            Icons.star,
-
+                                          Icon(Icons.star,
                                             color: Colors.amber,
-
                                           ),),
                                   ]),
                             ),
@@ -248,14 +210,33 @@ class _MapScreenState extends State<MapScreen> {
 
   Future <void> getCoords(String id) async {
     await FirebaseFirestore.instance.collection(id)
-        .where("name",isEqualTo: null)
+        .where(Constants.HOTEL_NAME,isEqualTo: null)
         .get().then((querySnapshot) {
       querySnapshot.docs.forEach((element) {
-        if(element.data()["name"]!= null){
+        if(element.data()[Constants.HOTEL_NAME]!= null){
           list.add(element);
         }
       }
       );
+    });
+  }
+
+  void initiateMapData(){
+    Services().getStringList().then((value){
+      print(value);
+      user =  Provider.of<Data>(context,listen: false).auth ?? value[0];
+      getCoords(user).then((value){
+        list.forEach((element) {
+          latLng = element.data()[Constants.HOTEL_COORDINATES];
+          allMarkers.add(Marker(
+              markerId: MarkerId(element.data()[Constants.HOTEL_NAME]),
+              draggable: false,
+              infoWindow:
+              InfoWindow(title: element.data()[Constants.HOTEL_NAME], snippet: element.data()[Constants.HOTEL_LOCATION]),
+              position: LatLng(latLng.latitude,latLng.longitude)));
+          setState(() {});
+        });
+      });
     });
   }
 }

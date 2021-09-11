@@ -10,6 +10,7 @@ import 'package:suites/Screens/FavouriteScreen.dart';
 import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Screens/TopRatingScreen.dart';
 import 'package:suites/Services/Listener.dart';
+import 'package:suites/Services/Services.dart';
 import 'package:suites/Widgets/InfoDialog.dart';
 
 import 'LoginScreen.dart';
@@ -42,7 +43,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
    logo = Image.asset("images/backdrop2.jpg",gaplessPlayback: true,);
    logo2 = Image.asset("images/avatar.jpg",gaplessPlayback: true,);
 
-    getBoolToSF().then((value){
+   Services().getStringList().then((value){
       setState(() {
         username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
       });

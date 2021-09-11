@@ -8,11 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suites/Networking/FireBaseWorks.dart';
 import 'package:suites/Services/Listener.dart';
+import 'package:suites/Services/constants.dart';
 import 'package:suites/Widgets/CalendarWidget.dart';
 import 'package:suites/Widgets/HotelCard.dart';
 import 'package:suites/Widgets/InfoColumn.dart';
 
-import '../Services.dart';
+import '../Services/Services.dart';
 
 
 
@@ -36,7 +37,7 @@ class _HotelpageState extends State<Hotelpage> {
   DateTime checkIn = DateTime.now();
   DateTime checkOut = DateTime.now();
   int multiplier = 1;
-  bool multiplier_Check = false;
+  bool multiplierCheck = false;
   int selectedIndex = 0;
 
 
@@ -51,17 +52,7 @@ class _HotelpageState extends State<Hotelpage> {
 @override
   void initState(){
   super.initState();
-  getBoolToSF().then((value){
-  setState(() {
-    print(value);
-   user =  Provider.of<Data>(context,listen: false).userInfo?.uid ?? value[0];
-    username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
-    print(user);
-    FireWorks().addUser(user, list);
-
-
-  });
-});
+    initiateWithUserInfo();
   }
 
 
@@ -110,12 +101,12 @@ class _HotelpageState extends State<Hotelpage> {
                                       child: CalendarWidget(function:(String text){
                                         Services().showInSnackBar(text, context);
                                       },
-                                      result: (a,b){
+                                      result: (date2,date1){
                                         setState(() {
-                                          checkIn = b;
-                                          checkOut = a;
+                                          checkIn = date1;
+                                          checkOut = date2;
                                           multiplier = checkOut.day - checkIn.day;
-                                          multiplier_Check = true;
+                                          multiplierCheck = true;
                                         });
 
                                       },))
@@ -161,14 +152,14 @@ class _HotelpageState extends State<Hotelpage> {
                     itemBuilderType: PaginateBuilderType.listView,
                     itemBuilder: (index,context,documentsnapshot){
 
-                         if(documentsnapshot.data()["favourite"] == false){
+                         if(documentsnapshot.data()[Constants.HOTEL_FAVOURITE] == false){
                          }
                         return  Column(
                           children: [
                             HotelCard(querySnapshot: documentsnapshot.data(),index: index,user:user,function:(String text){
                               Services().showInSnackBar(text,context);
                       }
-                           ,snapshot: documentsnapshot,check: multiplier_Check,multiplier: multiplier,),
+                           ,snapshot: documentsnapshot,check: multiplierCheck,multiplier: multiplier,),
                             SizedBox(
                               height: 20,
                             ) ],
@@ -176,8 +167,8 @@ class _HotelpageState extends State<Hotelpage> {
 
                     },
                     query: widget.isFavouritePage?FirebaseFirestore.instance.collection(user)
-                        .orderBy("name").where("favourite",isEqualTo: true):
-                    FirebaseFirestore.instance.collection(user).orderBy("name")
+                        .orderBy(Constants.HOTEL_NAME).where(Constants.HOTEL_FAVOURITE,isEqualTo: true):
+                    FirebaseFirestore.instance.collection(user).orderBy(Constants.HOTEL_NAME)
                     ,
                     isLive: true,),
                 ),
@@ -186,11 +177,13 @@ class _HotelpageState extends State<Hotelpage> {
           ),
         );
   }
-
-}
-Future <List<String>> getBoolToSF()async{
-  SharedPreferences preferences = await SharedPreferences.getInstance();
-  List <String> boolvalue = preferences.getStringList("UID");
-  return boolvalue;
-
+   void initiateWithUserInfo(){
+     Services().getStringList().then((value){
+       setState(() {
+         user =  Provider.of<Data>(context,listen: false).userInfo?.uid ?? value[0];
+         username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
+         FireBaseWorks().getUserData(user, list);
+       });
+     });
+   }
 }

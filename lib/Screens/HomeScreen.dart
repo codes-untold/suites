@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:suites/Widgets/OnBoardWidgetOne.dart';
 import 'package:suites/Widgets/OnBoardWidgetThree.dart';
 import 'package:suites/Widgets/OnBoardWidgetTwo.dart';
-
 import 'LoginScreen.dart';
 
 

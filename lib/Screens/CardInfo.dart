@@ -8,11 +8,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:suites/Services/constants.dart';
 import 'package:suites/Widgets/HotelCard.dart';
 
-import '../Services.dart';
+import '../Services/Services.dart';
 
 
+// ignore: must_be_immutable
 class CardInfo extends StatefulWidget {
 
   Function function;
@@ -26,8 +28,8 @@ class CardInfo extends StatefulWidget {
 }
 
 class _CardInfoState extends State<CardInfo> {
-  List <dynamic> item = [];
-  List <dynamic> itemo = [];
+  List <dynamic> imageList = [];
+  List <dynamic> featureList = [];
   double ratingg;
 
 
@@ -35,11 +37,9 @@ class _CardInfoState extends State<CardInfo> {
   @override
   void initState() {
 
-    ratingg = toDecimal(widget.snapshot.data()["myrating"]??0);
-
-    item = widget.snapshot.data()["Imagelist"];
-    itemo = widget.snapshot.data()["features"];
-    //print(widget.features);
+    ratingg = toDecimal(widget.snapshot.data()[Constants.USER_RATING]??0);
+    imageList = widget.snapshot.data()[Constants.HOTEL_IMAGE_LIST];
+    featureList = widget.snapshot.data()[Constants.HOTEL_FEATURES];
     super.initState();
   }
   @override
@@ -49,7 +49,7 @@ class _CardInfoState extends State<CardInfo> {
         child: Column(
             children: [
               CarouselSlider(
-                items: item.map((e){
+                items: imageList.map((e){
                   return Container(
                     width: MediaQuery.of(context).size.width,
                     child: CachedNetworkImage(
@@ -94,19 +94,16 @@ class _CardInfoState extends State<CardInfo> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(widget.snapshot.data()["name"],style: TextStyle(
+                          Text(widget.snapshot.data()[Constants.HOTEL_NAME],style: TextStyle(
                               color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 18.0
                           ),),
-
                           SizedBox(height: 5.0,),
-
                           Row(
                             children: [
                               Icon(Icons.location_on,size: 16.0,color: Colors.black),
-                              Text(widget.snapshot.data()["location"]),
+                              Text(widget.snapshot.data()[Constants.HOTEL_LOCATION]),
                             ],)
                         ],
-
                       ),
 
                       MaterialButton(
@@ -134,7 +131,7 @@ class _CardInfoState extends State<CardInfo> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Price",
+                          Text(Constants.HOTEL_PRICE,
                             style:  TextStyle(
                                 color: Colors.black54,fontWeight: FontWeight.w800,fontSize: 14.0
                             ),),
@@ -147,7 +144,7 @@ class _CardInfoState extends State<CardInfo> {
                             Image.asset("images/nairasign.png",
                               width: 15.0,
                               height: 15.0,),
-                            Text(Services().fixPrice(widget.snapshot.data()["price"].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
+                            Text(Services().fixPrice(widget.snapshot.data()[Constants.HOTEL_PRICE].toString()),style: TextStyle(color: Colors.black,fontWeight: FontWeight.w800),)
                           ],)
 
                         ],
@@ -287,7 +284,7 @@ class _CardInfoState extends State<CardInfo> {
 
                               children: [
 
-                                Icon(getWidget(itemo[i]),color: Colors.blue,size:MediaQuery.of(context).size.height *0.03,),
+                                Icon(getWidget(featureList[i]),color: Colors.blue,size:MediaQuery.of(context).size.height *0.03,),
 
                                 SizedBox(
 
@@ -295,7 +292,7 @@ class _CardInfoState extends State<CardInfo> {
 
                                 ),
 
-                                Text(itemo[i],style: TextStyle(color: Colors.black54,fontSize: 12.0,fontWeight: FontWeight.w700),)
+                                Text(featureList[i],style: TextStyle(color: Colors.black54,fontSize: 12.0,fontWeight: FontWeight.w700),)
 
                               ],
 
@@ -313,7 +310,7 @@ class _CardInfoState extends State<CardInfo> {
 
 
 
-                      itemCount: itemo.length,
+                      itemCount: featureList.length,
 
                       scrollDirection: Axis.horizontal,
 
@@ -349,7 +346,7 @@ class _CardInfoState extends State<CardInfo> {
 
                   ),
 
-                  Text( widget.snapshot.data()["about"]
+                  Text( widget.snapshot.data()[Constants.HOTEL_DESCRIPTION]
 
                     ,style: TextStyle(
                       height: 1.5,
@@ -383,29 +380,32 @@ class _CardInfoState extends State<CardInfo> {
       case "Games": return Icons.gamepad;
       break;
     }
+    return null;
   }
 
 
+  //Share image from app to other apps
   void shareImage()async{
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sharing...")));
-    print(widget.snapshot.data()["about"]);
-    final response = await get(Uri.parse(item[0]));
+    print(widget.snapshot.data()[Constants.HOTEL_NAME]);
+    final response = await get(Uri.parse(imageList[0]));
     final bytes = response.bodyBytes;
 
     final Directory temp = await getExternalStorageDirectory();
     final File imageFile = File('${temp.path}/tempImage.jpg');
     imageFile.writeAsBytesSync(bytes);
     print('${temp.path}/tempImage');
-    Share.shareFiles(['${temp.path}/tempImage.jpg'], text: widget.snapshot.data()["about"],
-        subject:widget.snapshot.data()["name"] );
+    Share.shareFiles(['${temp.path}/tempImage.jpg'], text: widget.snapshot.data()[Constants.HOTEL_DESCRIPTION],
+        subject:widget.snapshot.data()[Constants.HOTEL_NAME] );
 
   }
 
-updateRating()async{
-  await FirebaseFirestore.instance.collection(widget.user).doc(widget.snapshot.id)
-      .update({"myrating":ratingg.round()}).then((value) {})
-      .onError((error, stackTrace) {
-    print(error);
-  });
-}
+        //update user rating document on firebase firestore
+        updateRating()async{
+          await FirebaseFirestore.instance.collection(widget.user).doc(widget.snapshot.id)
+              .update({Constants.USER_RATING:ratingg.round()}).then((value) {})
+              .onError((error, stackTrace) {
+            print(error);
+          });
+        }
 }

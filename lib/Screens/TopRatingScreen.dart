@@ -7,11 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:suites/Networking/FireBaseWorks.dart';
 import 'package:suites/Screens/Hotelpage.dart';
 import 'package:suites/Services/Listener.dart';
+import 'package:suites/Services/constants.dart';
 import 'package:suites/Widgets/CalendarWidget.dart';
 import 'package:suites/Widgets/HotelCard.dart';
 import 'package:suites/Widgets/InfoColumn.dart';
 
-import '../Services.dart';
+import '../Services/Services.dart';
 
 
 class TopRatingScreen extends StatefulWidget {
@@ -45,13 +46,12 @@ class _TopRatingScreenState extends State<TopRatingScreen> {
   @override
   void initState(){
     super.initState();
-    getBoolToSF().then((value){
+    Services().getStringList().then((value){
       setState(() {
-        print(value);
         user =  Provider.of<Data>(context,listen: false).userInfo?.uid ?? value[0];
         username =  Provider.of<Data>(context,listen: false).userInfo?.displayName ?? value[1];
         print(user);
-        FireWorks().addUser(user, list);
+        FireBaseWorks().getUserData(user, list);
       });
     });
   }
@@ -166,8 +166,8 @@ class _TopRatingScreenState extends State<TopRatingScreen> {
 
 
                     },
-                    query: FirebaseFirestore.instance.collection(user).orderBy("rating")
-                      .where("rating",isGreaterThan: 3)
+                    query: FirebaseFirestore.instance.collection(user).orderBy(Constants.USER_RATING)
+                      .where(Constants.USER_RATING,isGreaterThan: 3)
                     ,
                     isLive: true,),
                 ),

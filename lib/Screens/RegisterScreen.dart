@@ -17,7 +17,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   String username;
   String email;
   String password;
-  final GlobalKey<FormState> _formkey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool textCheck = false;
   bool wordCheck = false;
 
@@ -49,7 +49,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               padding: const EdgeInsets.all(15.0),
               child: Center(
                 child: Form(
-                  key: _formkey,
+                  key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -189,11 +189,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
 
   createUser(String username,email,password)async{
-    if(!_formkey.currentState.validate()){
+    if(!_formKey.currentState.validate()){
       return;
     }
 
-    _formkey.currentState.save();
+    _formKey.currentState.save();
     setState(() {
       loading = true;
     });

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Services{
 
@@ -81,6 +82,20 @@ class Services{
        case 7:
          return "${price.substring(0,1)},${price.substring(1, 4)},${price.substring(4, 7)}";
      }
+
+   }
+
+
+   getBoolToSF()async{
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+     bool boolvalue = preferences.getBool("boolvalue")?? false;
+     return boolvalue;
+
+   }
+   Future <List<String>> getStringList()async{
+     SharedPreferences preferences = await SharedPreferences.getInstance();
+     List <String> boolvalue = preferences.getStringList("UID");
+     return boolvalue;
 
    }
 
