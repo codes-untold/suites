@@ -55,143 +55,146 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size.height;
 
+
     return Scaffold(
       backgroundColor: Colors.white,
-      body: logo != null ?SafeArea(
+      body: SafeArea(
         child: ModalProgressHUD(
           inAsyncCall: loading,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Stack(
-                  alignment: AlignmentDirectional.topStart,
-                  children: [
-                    Container(
-                      child: Image(image: logo.image,gaplessPlayback: true,),
-                      margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.height *0.07978),
-                    ),
-                    Positioned(
-                      top: 165,
-                      child:
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(100),
-                            border: Border.all(width: 2,color: Colors.blue)
-                        ),
-                        child: CircleAvatar(
-                            backgroundImage: logo2.image,
-                           // child:Image(image: logo2.image,gaplessPlayback: true,),
-                            radius:  MediaQuery.of(context).size.width * 0.1388,
-                            backgroundColor: Colors.white
-                        ),
-                      ),),
-                    Positioned(
-                        top: 220,
-                        left: MediaQuery.of(context).size.width *0.39,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(username!=null?username:"...",
-                              style: TextStyle(
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w700
-                              ),),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.green
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text("Active",
-                                  style: TextStyle(
-                                      fontSize: 12.0,
-                                      color: Colors.black54
-                                  ),),
-                              ],
-                            ),
-
-                          ],
-                        ))
-                  ],
-                ),
-
-                SizedBox(height: screenSize * 0.0465,),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Stack(
+                    alignment: AlignmentDirectional.topStart,
                     children: [
-                      InfoTile(name: "About",color1: Colors.blue[50],
-                        color2: Colors.blue,data: Icons.info,function: (){
-                          dialogFunction(context);
-
-                        },),
-                      SizedBox(height: screenSize * 0.0398 ,),
-
-                      InfoTile(name: "Favourites",color1: Colors.orange[100],
-                          color2: Colors.deepOrangeAccent,data: Icons.favorite,function: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                            return FavouriteScreen();
-                          }));
-                        },),
-
-                      SizedBox(height: screenSize * 0.0398 ,),
-
-                      InfoTile(name: "Top Ratings",color1: Colors.blue[50],
-                          color2: Colors.blue,data: Icons.star,function: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context){
-                            return TopRatingScreen();
-                          }));
-                        },),
-
-                      SizedBox(height: screenSize * 0.093,),
-
-                      OutlinedButton(onPressed: (){
-                        signOut();
-                      },
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.exit_to_app_outlined,
-                              color: Colors.deepOrangeAccent,),
-                            SizedBox(width: 5,),
-                            Text("Sign Out",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300
+                      Container(
+                        child: Image(image: logo.image,gaplessPlayback: true,),
+                        margin: EdgeInsets.only(bottom: MediaQuery.of(context).size.width *0.07978),
+                      ),
+                      Positioned(
+                        top: MediaQuery.of(context).size.width *0.45,
+                        child:
+                        Container(
+                          padding: EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(100),
+                              border: Border.all(width: 2,color: Colors.blue)
+                          ),
+                          child: CircleAvatar(
+                              backgroundImage: logo2.image,
+                             // child:Image(image: logo2.image,gaplessPlayback: true,),
+                              radius:  MediaQuery.of(context).size.width * 0.1,
+                              backgroundColor: Colors.white
+                          ),
+                        ),),
+                      Positioned(
+                          top:MediaQuery.of(context).size.width *0.6,
+                          left: MediaQuery.of(context).size.width *0.3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(username!=null?username:"...",
+                                style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w700
+                                ),),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.green
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text("Active",
+                                    style: TextStyle(
+                                        fontSize: 12.0,
+                                        color: Colors.black54
+                                    ),),
+                                ],
                               ),
-                            )
-                          ],
-                        ),
 
-                        style: OutlinedButton.styleFrom(
-                            side:  BorderSide(
-                                color: Colors.grey,
-                                style: BorderStyle.solid
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                            )
-                        ) ,  )
+                            ],
+                          ))
                     ],
                   ),
-                ),
-              ],
+
+                  SizedBox(height: screenSize * 0.0465,),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InfoTile(name: "About",color1: Colors.blue[50],
+                          color2: Colors.blue,data: Icons.info,function: (){
+                            dialogFunction(context);
+
+                          },),
+                        SizedBox(height: screenSize * 0.0398 ,),
+
+                        InfoTile(name: "Favourites",color1: Colors.orange[100],
+                            color2: Colors.deepOrangeAccent,data: Icons.favorite,function: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return FavouriteScreen();
+                            }));
+                          },),
+
+                        SizedBox(height: screenSize * 0.0398 ,),
+
+                        InfoTile(name: "Top Ratings",color1: Colors.blue[50],
+                            color2: Colors.blue,data: Icons.star,function: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context){
+                              return TopRatingScreen();
+                            }));
+                          },),
+
+                        SizedBox(height: screenSize * 0.093,),
+
+                        OutlinedButton(onPressed: (){
+                          signOut();
+                        },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.exit_to_app_outlined,
+                                color: Colors.deepOrangeAccent,),
+                              SizedBox(width: 5,),
+                              Text("Sign Out",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300
+                                ),
+                              )
+                            ],
+                          ),
+
+                          style: OutlinedButton.styleFrom(
+                              side:  BorderSide(
+                                  color: Colors.grey,
+                                  style: BorderStyle.solid
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                              )
+                          ) ,  )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ):Center(child: CircularProgressIndicator(),),
+      ),
     );
   }
 
